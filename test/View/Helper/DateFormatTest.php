@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace LaminasTest\I18n\View\Helper;
 
+use function date_default_timezone_set;
+
 use DateTime;
 use DateTimeInterface;
 use IntlDateFormatter;
@@ -11,9 +13,9 @@ use IntlGregorianCalendar;
 use Laminas\I18n\View\Helper\DateFormat as DateFormatHelper;
 use LaminasTest\I18n\TestCase;
 use Locale;
+
 use PHPUnit\Framework\Attributes\DataProvider;
 
-use function date_default_timezone_set;
 use function str_replace;
 
 final class DateFormatTest extends TestCase

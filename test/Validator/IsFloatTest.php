@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace LaminasTest\I18n\Validator;
 
+use const INTL_ICU_DATA_VERSION;
+use const INTL_ICU_VERSION;
+
 use Laminas\I18n\Validator\IsFloat as IsFloatValidator;
 use LaminasTest\I18n\TestCase;
 use Locale;
+
 use NumberFormatter;
+
 use PHPUnit\Framework\Attributes\DataProvider;
 
 use function sprintf;
-
-use const INTL_ICU_DATA_VERSION;
-use const INTL_ICU_VERSION;
 
 final class IsFloatTest extends TestCase
 {

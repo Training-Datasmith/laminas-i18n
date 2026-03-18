@@ -1,27 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\I18n\Validator;
 
+use function assert;
+use function intl_is_failure;
+
 use IntlException;
+
+use function is_bool;
+use function is_float;
+use function is_int;
+use function is_scalar;
+use function is_string;
+
 use Laminas\Stdlib\ArrayUtils;
+
 use Laminas\Stdlib\StringUtils;
 use Laminas\Stdlib\StringWrapper\StringWrapperInterface;
 use Laminas\Validator\AbstractValidator;
 use Laminas\Validator\Exception;
 use Locale;
 use NumberFormatter;
-use Traversable;
 
-use function assert;
-use function intl_is_failure;
-use function is_bool;
-use function is_float;
-use function is_int;
-use function is_scalar;
-use function is_string;
 use function preg_match;
 use function preg_quote;
 use function str_replace;
+
+use Traversable;
 
 /** @final */
 class IsFloat extends AbstractValidator

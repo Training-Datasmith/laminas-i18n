@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\I18n\Filter;
 
-use Laminas\Stdlib\ErrorHandler;
-
 use function is_float;
+
 use function is_int;
 use function is_scalar;
+
+use Laminas\Stdlib\ErrorHandler;
 
 /** @final */
 class NumberFormat extends NumberParse

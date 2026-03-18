@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\I18n\View\Helper;
+
+use function is_array;
 
 use Laminas\I18n\Exception;
 use Laminas\I18n\Translator\Plural\Rule as PluralRule;
 use Laminas\View\Helper\AbstractHelper;
-use Laminas\View\Helper\DeprecatedAbstractHelperHierarchyTrait;
 
-use function is_array;
+use Laminas\View\Helper\DeprecatedAbstractHelperHierarchyTrait;
 
 /**
  * Helper for rendering text based on a count number (like the I18n plural translation helper, but when translation

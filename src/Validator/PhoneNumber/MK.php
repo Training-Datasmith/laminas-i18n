@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'code' => '389',
     'patterns' => [

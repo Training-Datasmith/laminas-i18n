@@ -1,20 +1,25 @@
 <?php
 
-namespace Laminas\I18n\Validator;
+declare(strict_types=1);
 
-use Laminas\Stdlib\ArrayUtils;
-use Laminas\Validator\AbstractValidator;
-use Laminas\Validator\Callback;
-use Laminas\Validator\Exception;
-use Locale;
-use Traversable;
+namespace Laminas\I18n\Validator;
 
 use function array_key_exists;
 use function is_callable;
 use function is_int;
 use function is_string;
+
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\Validator\AbstractValidator;
+
+use Laminas\Validator\Callback;
+use Laminas\Validator\Exception;
+use Locale;
+
 use function preg_match;
 use function strlen;
+
+use Traversable;
 
 /** @final */
 class PostCode extends AbstractValidator

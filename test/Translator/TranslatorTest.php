@@ -408,7 +408,7 @@ final class TranslatorTest extends TestCase
         );
         $events->attach(
             Translator::EVENT_MISSING_TRANSLATION,
-            static fn() => 'EVENT TRIGGERED'
+            static fn () => 'EVENT TRIGGERED'
         );
         $events->attach(
             Translator::EVENT_MISSING_TRANSLATION,
@@ -470,7 +470,7 @@ final class TranslatorTest extends TestCase
         );
         $events->attach(
             Translator::EVENT_NO_MESSAGES_LOADED,
-            static fn() => $textDomain
+            static fn () => $textDomain
         );
         $events->attach(
             Translator::EVENT_NO_MESSAGES_LOADED,

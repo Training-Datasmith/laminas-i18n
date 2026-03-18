@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace LaminasTest\I18n\Validator;
 
+use function is_array;
+
 use Laminas\I18n\Validator\PhoneNumber;
 use LaminasTest\I18n\TestCase;
 use Locale;
+
 use PHPUnit\Framework\Attributes\DataProvider;
 
-use function is_array;
 use function sprintf;
 
 final class PhoneNumberTest extends TestCase

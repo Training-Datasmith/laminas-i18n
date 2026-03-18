@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace LaminasTest\I18n\Translator;
 
+use function class_exists;
+
 use Laminas\I18n\Exception\RuntimeException;
 use Laminas\I18n\Translator\LoaderPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\ServiceManager;
 use LaminasTest\I18n\TestCase;
+
+use function method_exists;
+
 use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
 use ReflectionProperty;
+
 use stdClass;
 use Throwable;
-
-use function class_exists;
-use function method_exists;
 
 final class LoaderPluginManagerCompatibilityTest extends TestCase
 {

@@ -1,22 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\I18n\Validator;
 
+use function array_key_exists;
+use function intl_is_failure;
+
 use IntlException;
+
+use function is_bool;
+use function is_float;
+use function is_int;
+use function is_string;
+
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Validator\AbstractValidator;
 use Laminas\Validator\Exception;
 use Locale;
 use NumberFormatter;
-use Traversable;
 
-use function array_key_exists;
-use function intl_is_failure;
-use function is_bool;
-use function is_float;
-use function is_int;
-use function is_string;
 use function strtr;
+
+use Traversable;
 
 /** @final */
 class IsInt extends AbstractValidator

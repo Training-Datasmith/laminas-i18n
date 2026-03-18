@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Laminas\I18n\Validator;
 
+use function is_string;
+
 use Laminas\I18n\CountryCode as Country;
 use Laminas\I18n\Exception\InvalidArgumentException;
-use Laminas\Validator\AbstractValidator;
 
-use function is_string;
+use Laminas\Validator\AbstractValidator;
 
 final class CountryCode extends AbstractValidator
 {

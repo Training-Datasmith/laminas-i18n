@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Laminas\I18n\View\Helper\Container;
 
-use Laminas\Escaper\Escaper;
-use Laminas\I18n\Geography\CountryCodeListInterface;
-use Laminas\I18n\View\Helper\CountryCodeDataList;
-use Locale;
-use Psr\Container\ContainerInterface;
-use Traversable;
-
 use function assert;
 use function is_array;
 use function is_string;
 use function iterator_to_array;
+
+use Laminas\Escaper\Escaper;
+use Laminas\I18n\Geography\CountryCodeListInterface;
+
+use Laminas\I18n\View\Helper\CountryCodeDataList;
+use Locale;
+use Psr\Container\ContainerInterface;
+use Traversable;
 
 final class CountryCodeDataListFactory
 {

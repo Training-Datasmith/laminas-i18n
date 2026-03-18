@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace Laminas\I18n\View\Helper;
 
+use function array_map;
+use function implode;
+use function iterator_to_array;
+
 use Laminas\Escaper\Escaper;
 use Laminas\I18n\CountryCode;
+
 use Laminas\I18n\Geography\CountryCodeListInterface;
 use Laminas\View\HtmlAttributesSet;
 use Locale;
 
-use function array_map;
-use function implode;
-use function iterator_to_array;
-use function sprintf;
-
 use const PHP_EOL;
+
+use function sprintf;
 
 /**
  * A View Helper that outputs an HTML datalist of all the ISO-3166 countries

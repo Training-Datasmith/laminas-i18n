@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace LaminasTest\I18n\Validator;
 
+use function date_default_timezone_get;
+use function date_default_timezone_set;
+
 use DateTime;
 use IntlDateFormatter;
 use Laminas\I18n\Validator\DateTime as DateTimeValidator;
 use LaminasTest\I18n\TestCase;
+
 use Locale;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-use function date_default_timezone_get;
-use function date_default_timezone_set;
 use function sprintf;
 
 final class DateTimeTest extends TestCase

@@ -1,6 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\I18n\Translator;
+
+use function array_shift;
+use function get_debug_type;
+use function is_array;
+use function is_file;
+use function is_string;
 
 use Laminas\Cache;
 use Laminas\Cache\Storage\StorageInterface as CacheStorage;
@@ -9,20 +17,17 @@ use Laminas\EventManager\EventManager;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\I18n\Exception;
 use Laminas\I18n\Translator\Loader\FileLoaderInterface;
+
 use Laminas\I18n\Translator\Loader\RemoteLoaderInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
 use Locale;
-use Traversable;
 
-use function array_shift;
-use function get_debug_type;
-use function is_array;
-use function is_file;
-use function is_string;
 use function md5;
 use function rtrim;
 use function sprintf;
+
+use Traversable;
 
 /**
  * Translator.
@@ -460,7 +465,7 @@ class Translator implements TranslatorInterface
         }
 
         if ($this->isEventManagerEnabled()) {
-            $until = static fn($r): bool => is_string($r);
+            $until = static fn ($r): bool => is_string($r);
 
             $event = new Event(self::EVENT_MISSING_TRANSLATION, $this, [
                 'message'     => $message,
@@ -610,7 +615,7 @@ class Translator implements TranslatorInterface
         if ($messagesLoaded === 0) {
             $discoveredTextDomain = null;
             if ($this->isEventManagerEnabled()) {
-                $until = static fn($r): bool => $r instanceof TextDomain;
+                $until = static fn ($r): bool => $r instanceof TextDomain;
 
                 $event = new Event(self::EVENT_NO_MESSAGES_LOADED, $this, [
                     'locale'      => $locale,

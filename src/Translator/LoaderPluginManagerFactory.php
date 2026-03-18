@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\I18n\Translator;
+
+use function is_array;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
-use Psr\Container\ContainerInterface;
 
-use function is_array;
+use Psr\Container\ContainerInterface;
 
 /**
  * @psalm-import-type ServiceManagerConfiguration from ServiceManager

@@ -1,15 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\I18n\View\Helper;
+
+use function date_default_timezone_get;
 
 use DateTimeInterface;
 use IntlCalendar;
 use IntlDateFormatter;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\DeprecatedAbstractHelperHierarchyTrait;
+
 use Locale;
 
-use function date_default_timezone_get;
 use function md5;
 
 /**

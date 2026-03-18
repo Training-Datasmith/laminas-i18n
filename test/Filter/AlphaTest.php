@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace LaminasTest\I18n\Filter;
 
+use function array_keys;
+use function array_values;
+
 use Laminas\I18n\Filter\Alpha as AlphaFilter;
 use LaminasTest\I18n\TestCase;
 use Locale;
-use PHPUnit\Framework\Attributes\DataProvider;
-use stdClass;
 
-use function array_keys;
-use function array_values;
+use PHPUnit\Framework\Attributes\DataProvider;
+
 use function preg_match;
+
+use stdClass;
 
 final class AlphaTest extends TestCase
 {

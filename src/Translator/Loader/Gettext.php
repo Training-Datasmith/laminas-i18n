@@ -1,18 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\I18n\Translator\Loader;
+
+use function array_shift;
+use function explode;
+use function fclose;
+use function fopen;
+
+use function fread;
+use function fseek;
 
 use Laminas\I18n\Exception;
 use Laminas\I18n\Translator\Plural\Rule as PluralRule;
 use Laminas\I18n\Translator\TextDomain;
 use Laminas\Stdlib\ErrorHandler;
 
-use function array_shift;
-use function explode;
-use function fclose;
-use function fopen;
-use function fread;
-use function fseek;
 use function sprintf;
 use function strtolower;
 use function trim;

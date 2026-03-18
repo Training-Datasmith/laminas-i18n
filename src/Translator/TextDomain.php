@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\I18n\Translator;
+
+use function array_replace;
 
 use ArrayObject;
 use Laminas\I18n\Exception;
-use Laminas\I18n\Translator\Plural\Rule as PluralRule;
 
-use function array_replace;
+use Laminas\I18n\Translator\Plural\Rule as PluralRule;
 
 /**
  * Text domain.

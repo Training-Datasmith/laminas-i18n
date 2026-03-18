@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     '' => [
-        'plural_forms' => 'nplurals=3; plural=(n==0 ? 0 : (n == 1 ? 1 : 2));'
+        'plural_forms' => 'nplurals=3; plural=(n==0 ? 0 : (n == 1 ? 1 : 2));',
     ],
     'Message 2' => 'Nachricht 2',
     'Message 9' => 'Nachricht 9',

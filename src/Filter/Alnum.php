@@ -1,15 +1,19 @@
 <?php
 
-namespace Laminas\I18n\Filter;
+declare(strict_types=1);
 
-use Laminas\Stdlib\StringUtils;
-use Locale;
-use Traversable;
+namespace Laminas\I18n\Filter;
 
 use function in_array;
 use function is_array;
 use function is_scalar;
+
+use Laminas\Stdlib\StringUtils;
+use Locale;
+
 use function preg_replace;
+
+use Traversable;
 
 /**
  * @psalm-type Options = array{

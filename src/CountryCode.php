@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Laminas\I18n;
 
+use function assert;
+
 use Laminas\I18n\Exception\InvalidArgumentException;
+
 use Locale;
 
-use function assert;
 use function preg_match;
 use function strtoupper;
 

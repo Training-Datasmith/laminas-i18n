@@ -138,9 +138,9 @@ final class PostCodeTest extends TestCase
         self::assertStringContainsString('not appear to be a postal code', $message['postcodeNoMatch']);
     }
 
-     /**
-      * Test service class with invalid validation
-      */
+    /**
+     * Test service class with invalid validation
+     */
     public function testServiceClass(): void
     {
         $params = (object) [

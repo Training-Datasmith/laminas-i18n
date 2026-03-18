@@ -1,23 +1,28 @@
 <?php
 
-namespace Laminas\I18n\Validator;
+declare(strict_types=1);
 
-use Laminas\Stdlib\ArrayUtils;
-use Laminas\Validator\AbstractValidator;
-use Locale;
-use Traversable;
+namespace Laminas\I18n\Validator;
 
 use function array_key_exists;
 use function assert;
 use function file_exists;
 use function in_array;
+
 use function is_scalar;
 use function is_string;
+
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\Validator\AbstractValidator;
+use Locale;
+
 use function preg_match;
 use function str_starts_with;
 use function strlen;
 use function strtoupper;
 use function substr;
+
+use Traversable;
 
 /**
  * @deprecated This class is deprecated and will be removed in v3.0.0

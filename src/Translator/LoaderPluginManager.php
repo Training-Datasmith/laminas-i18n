@@ -1,15 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\I18n\Translator;
+
+use function get_debug_type;
 
 use Laminas\I18n\Exception;
 use Laminas\I18n\Translator\Loader\FileLoaderInterface;
 use Laminas\I18n\Translator\Loader\RemoteLoaderInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
+
 use Laminas\ServiceManager\Factory\InvokableFactory;
 
-use function get_debug_type;
 use function sprintf;
 
 /**

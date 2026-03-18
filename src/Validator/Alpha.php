@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\I18n\Validator;
 
-use Laminas\I18n\Filter\Alpha as AlphaFilter;
-
 use function is_string;
+
+use Laminas\I18n\Filter\Alpha as AlphaFilter;
 
 /** @final */
 class Alpha extends Alnum

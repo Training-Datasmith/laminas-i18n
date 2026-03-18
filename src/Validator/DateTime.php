@@ -1,16 +1,20 @@
 <?php
 
-namespace Laminas\I18n\Validator;
+declare(strict_types=1);
 
-use IntlDateFormatter;
-use IntlException;
-use Laminas\Validator\AbstractValidator;
-use Laminas\Validator\Exception as ValidatorException;
-use Locale;
+namespace Laminas\I18n\Validator;
 
 use function date_default_timezone_get;
 use function intl_is_failure;
+
+use IntlDateFormatter;
+use IntlException;
+
 use function is_string;
+
+use Laminas\Validator\AbstractValidator;
+use Laminas\Validator\Exception as ValidatorException;
+use Locale;
 
 /** @final */
 class DateTime extends AbstractValidator

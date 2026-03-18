@@ -1,16 +1,19 @@
 <?php
 
-namespace Laminas\I18n\Validator;
+declare(strict_types=1);
 
-use Laminas\I18n\Filter\Alnum as AlnumFilter;
-use Laminas\Validator\AbstractValidator;
+namespace Laminas\I18n\Validator;
 
 use function is_array;
 use function is_bool;
+
 use function is_float;
 use function is_int;
 use function is_scalar;
 use function is_string;
+
+use Laminas\I18n\Filter\Alnum as AlnumFilter;
+use Laminas\Validator\AbstractValidator;
 
 /** @final */
 class Alnum extends AbstractValidator

@@ -1,13 +1,17 @@
 <?php
 
-namespace Laminas\I18n\Translator\Loader;
+declare(strict_types=1);
 
-use Laminas\I18n\Exception;
-use Laminas\I18n\Translator\Plural\Rule as PluralRule;
-use Laminas\I18n\Translator\TextDomain;
+namespace Laminas\I18n\Translator\Loader;
 
 use function gettype;
 use function is_array;
+
+use Laminas\I18n\Exception;
+
+use Laminas\I18n\Translator\Plural\Rule as PluralRule;
+use Laminas\I18n\Translator\TextDomain;
+
 use function sprintf;
 
 /**

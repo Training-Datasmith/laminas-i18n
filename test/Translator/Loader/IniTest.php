@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace LaminasTest\I18n\Translator\Loader;
 
+use function get_include_path;
+
 use Laminas\I18n\Exception\InvalidArgumentException;
 use Laminas\I18n\Translator\Loader\Ini as IniLoader;
 use Laminas\I18n\Translator\TextDomain;
+
 use LaminasTest\I18n\TestCase;
 
-use function get_include_path;
-use function realpath;
-use function set_include_path;
-
 use const PATH_SEPARATOR;
+
+use function realpath;
+
+use function set_include_path;
 
 final class IniTest extends TestCase
 {

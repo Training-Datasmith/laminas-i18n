@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\I18n\Translator\Plural;
+
+use function ctype_digit;
 
 use Laminas\I18n\Exception;
 
-use function ctype_digit;
 use function max;
 use function sprintf;
 
@@ -104,12 +107,12 @@ class Parser
         // Literals
         $this->registerSymbol('n')->setNullDenotationGetter(
             // @codingStandardsIgnoreStart Generic.WhiteSpace.ScopeIndent.IncorrectExact
-            static fn(Symbol $self): \Laminas\I18n\Translator\Plural\Symbol => $self
+            static fn (Symbol $self): \Laminas\I18n\Translator\Plural\Symbol => $self
             // @codingStandardsIgnoreEnd
         );
         $this->registerSymbol('number')->setNullDenotationGetter(
             // @codingStandardsIgnoreStart Generic.WhiteSpace.ScopeIndent.IncorrectExact
-            static fn(Symbol $self): \Laminas\I18n\Translator\Plural\Symbol => $self
+            static fn (Symbol $self): \Laminas\I18n\Translator\Plural\Symbol => $self
             // @codingStandardsIgnoreEnd
         );
 

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Laminas\I18n\Geography;
 
+use function array_map;
+
 use ArrayIterator;
+
+use function count;
+
 use Laminas\I18n\CountryCode;
 use Traversable;
-
-use function array_map;
-use function count;
 
 final class DefaultCountryCodeList implements CountryCodeListInterface
 {

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace LaminasTest\I18n\Geography;
 
+use function count;
+
 use Laminas\I18n\CountryCode;
 use Laminas\I18n\Geography\DefaultCountryCodeList;
-use PHPUnit\Framework\TestCase;
 
-use function count;
+use PHPUnit\Framework\TestCase;
 
 final class DefaultCountryCodeListTest extends TestCase
 {

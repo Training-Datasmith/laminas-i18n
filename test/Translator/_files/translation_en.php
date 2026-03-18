@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     '' => [
-        'plural_forms' => 'nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);'
+        'plural_forms' => 'nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);',
     ],
     'Message 1' => 'Message 1 (en)',
     'Message 2' => 'Message 2 (en)',
@@ -11,7 +13,7 @@ return [
     'Message 5' => [
         0 => 'Message 5 (en) Plural 0',
         1 => 'Message 5 (en) Plural 1',
-        2 => 'Message 5 (en) Plural 2'
+        2 => 'Message 5 (en) Plural 2',
     ],
     'Cooking furniture' => 'Küchen Möbel (en)',
     'Küchen Möbel' => 'Cooking furniture (en)',

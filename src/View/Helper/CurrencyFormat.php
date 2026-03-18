@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\I18n\View\Helper;
 
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\DeprecatedAbstractHelperHierarchyTrait;
 use Locale;
-use NumberFormatter;
 
 use function md5;
+
+use NumberFormatter;
+
 use function preg_quote;
 use function preg_replace;
 use function sprintf;

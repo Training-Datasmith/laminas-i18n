@@ -1,19 +1,22 @@
 <?php
 
-namespace Laminas\I18n\Filter;
+declare(strict_types=1);
 
-use Laminas\I18n\Exception;
-use Laminas\Stdlib\ErrorHandler;
-use NumberFormatter;
-use Traversable;
+namespace Laminas\I18n\Filter;
 
 use function intl_get_error_message;
 use function is_array;
 use function is_bool;
 use function is_float;
+
 use function is_int;
 use function is_scalar;
 use function iterator_to_array;
+
+use Laminas\I18n\Exception;
+use Laminas\Stdlib\ErrorHandler;
+use NumberFormatter;
+use Traversable;
 
 /**
  * @psalm-type Options = array{

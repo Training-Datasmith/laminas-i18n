@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\I18n\Filter;
+
+use function in_array;
+use function is_array;
+
+use function is_scalar;
 
 use Laminas\Stdlib\StringUtils;
 use Locale;
 
-use function in_array;
-use function is_array;
-use function is_scalar;
 use function preg_replace;
 
 /** @final */

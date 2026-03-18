@@ -1,15 +1,21 @@
 <?php
 
-namespace Laminas\I18n\View\Helper;
+declare(strict_types=1);
 
-use Laminas\View\Helper\AbstractHelper;
-use Laminas\View\Helper\DeprecatedAbstractHelperHierarchyTrait;
-use Locale;
-use NumberFormatter;
+namespace Laminas\I18n\View\Helper;
 
 use function is_array;
 use function is_int;
+
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\Helper\DeprecatedAbstractHelperHierarchyTrait;
+
+use Locale;
+
 use function md5;
+
+use NumberFormatter;
+
 use function serialize;
 
 /**
