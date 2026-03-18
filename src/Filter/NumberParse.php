@@ -67,7 +67,7 @@ class NumberParse extends AbstractLocale
      * @param  string|null $locale
      * @return $this
      */
-    public function setLocale($locale = null)
+    public function setLocale($locale = null): static
     {
         $this->options['locale'] = $locale;
         $this->formatter         = null;

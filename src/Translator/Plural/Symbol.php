@@ -93,7 +93,7 @@ class Symbol
      *
      * @return $this
      */
-    public function setNullDenotationGetter(Closure $getter)
+    public function setNullDenotationGetter(Closure $getter): static
     {
         $this->nullDenotationGetter = $getter;
         return $this;
@@ -104,7 +104,7 @@ class Symbol
      *
      * @return $this
      */
-    public function setLeftDenotationGetter(Closure $getter)
+    public function setLeftDenotationGetter(Closure $getter): static
     {
         $this->leftDenotationGetter = $getter;
         return $this;

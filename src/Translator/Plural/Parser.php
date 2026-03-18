@@ -64,7 +64,7 @@ class Parser
         // Ternary operators
         $this->registerSymbol('?', 20)->setLeftDenotationGetter(
             // @codingStandardsIgnoreStart Generic.WhiteSpace.ScopeIndent.IncorrectExact
-            static function (Symbol $self, Symbol $left) {
+            static function (Symbol $self, Symbol $left): \Laminas\I18n\Translator\Plural\Symbol {
                 $self->first  = $left;
                 $self->second = $self->parser->expression();
                 $self->parser->advance(':');
@@ -104,12 +104,12 @@ class Parser
         // Literals
         $this->registerSymbol('n')->setNullDenotationGetter(
             // @codingStandardsIgnoreStart Generic.WhiteSpace.ScopeIndent.IncorrectExact
-            static fn(Symbol $self) => $self
+            static fn(Symbol $self): \Laminas\I18n\Translator\Plural\Symbol => $self
             // @codingStandardsIgnoreEnd
         );
         $this->registerSymbol('number')->setNullDenotationGetter(
             // @codingStandardsIgnoreStart Generic.WhiteSpace.ScopeIndent.IncorrectExact
-            static fn(Symbol $self) => $self
+            static fn(Symbol $self): \Laminas\I18n\Translator\Plural\Symbol => $self
             // @codingStandardsIgnoreEnd
         );
 
@@ -140,7 +140,7 @@ class Parser
     {
         $this->registerSymbol($id, $leftBindingPower)->setLeftDenotationGetter(
             // @codingStandardsIgnoreStart Generic.WhiteSpace.ScopeIndent.IncorrectExact
-            static function (Symbol $self, Symbol $left) use ($leftBindingPower) {
+            static function (Symbol $self, Symbol $left) use ($leftBindingPower): \Laminas\I18n\Translator\Plural\Symbol {
                 $self->first  = $left;
                 $self->second = $self->parser->expression($leftBindingPower);
                 return $self;
@@ -160,7 +160,7 @@ class Parser
     {
         $this->registerSymbol($id, $leftBindingPower)->setLeftDenotationGetter(
             // @codingStandardsIgnoreStart Generic.WhiteSpace.ScopeIndent.IncorrectExact
-            static function (Symbol $self, Symbol $left) use ($leftBindingPower) {
+            static function (Symbol $self, Symbol $left) use ($leftBindingPower): \Laminas\I18n\Translator\Plural\Symbol {
                 $self->first  = $left;
                 $self->second = $self->parser->expression($leftBindingPower - 1);
                 return $self;
@@ -180,7 +180,7 @@ class Parser
     {
         $this->registerSymbol($id, $leftBindingPower)->setNullDenotationGetter(
             // @codingStandardsIgnoreStart Generic.WhiteSpace.ScopeIndent.IncorrectExact
-            static function (Symbol $self) use ($leftBindingPower) {
+            static function (Symbol $self) use ($leftBindingPower): \Laminas\I18n\Translator\Plural\Symbol {
                 $self->first  = $self->parser->expression($leftBindingPower);
                 $self->second = null;
                 return $self;
@@ -230,10 +230,9 @@ class Parser
     /**
      * Parse a string.
      *
-     * @param  string $string
      * @return Symbol
      */
-    public function parse($string)
+    public function parse(string $string)
     {
         $this->string       = $string . "\0";
         $this->currentPos   = 0;
@@ -267,10 +266,9 @@ class Parser
      * Advance the current token and optionally check the old token id.
      *
      * @param  string $id
-     * @return void
      * @throws Exception\ParseException
      */
-    public function advance($id = null)
+    public function advance($id = null): void
     {
         if ($id !== null && $this->currentToken->id !== $id) {
             throw new Exception\ParseException(

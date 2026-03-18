@@ -42,10 +42,8 @@ trait TranslatorAwareTrait
 
     /**
      * Checks if the object has a translator
-     *
-     * @return bool
      */
-    public function hasTranslator()
+    public function hasTranslator(): bool
     {
         return null !== $this->translator;
     }

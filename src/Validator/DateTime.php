@@ -35,24 +35,19 @@ class DateTime extends AbstractValidator
      */
     protected $locale;
 
-    /** @var int|null */
-    protected $dateType;
+    protected int $dateType;
 
-    /** @var int|null */
-    protected $timeType;
+    protected int $timeType;
 
     /**
      * Optional timezone
-     *
-     * @var string|null
      */
-    protected $timezone;
+    protected string $timezone;
 
     /** @var string|null */
     protected $pattern;
 
-    /** @var int|null */
-    protected $calendar;
+    protected int $calendar;
 
     /** @var IntlDateFormatter|null */
     protected $formatter;

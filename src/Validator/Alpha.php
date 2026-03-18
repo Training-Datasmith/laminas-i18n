@@ -44,9 +44,8 @@ class Alpha extends Alnum
      * Returns true if and only if $value contains only alphabetic characters
      *
      * @param mixed $value
-     * @return bool
      */
-    public function isValid($value)
+    public function isValid($value): bool
     {
         if (! is_string($value)) {
             $this->error(self::INVALID);

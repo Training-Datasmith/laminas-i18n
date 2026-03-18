@@ -15,10 +15,6 @@ use Locale;
  */
 abstract class AbstractLocale extends AbstractFilter
 {
-    public function __construct()
-    {
-    }
-
     /**
      * Sets the locale option
      *

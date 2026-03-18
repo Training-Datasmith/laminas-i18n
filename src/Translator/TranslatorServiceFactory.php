@@ -17,7 +17,6 @@ class TranslatorServiceFactory implements FactoryInterface
      * Create a Translator instance.
      *
      * @param string $requestedName
-     * @param null|array $options
      * @return Translator
      */
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)

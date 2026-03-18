@@ -31,9 +31,8 @@ class LoaderPluginManagerFactory implements FactoryInterface
      * @param string $name
      * @param array<string, mixed>|null $options
      * @psalm-param ServiceManagerConfiguration|null $options
-     * @return LoaderPluginManager
      */
-    public function __invoke(ContainerInterface $container, $name, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $name, ?array $options = null): \Laminas\I18n\Translator\LoaderPluginManager
     {
         $options     ??= [];
         $pluginManager = new LoaderPluginManager($container, $options);
@@ -80,10 +79,8 @@ class LoaderPluginManagerFactory implements FactoryInterface
      *
      * @deprecated Since 2.16.0 - This component is no longer compatible with Service Manager v2.
      *             This method will be removed in version 3.0
-     *
-     * @return void
      */
-    public function setCreationOptions(array $options)
+    public function setCreationOptions(array $options): void
     {
         $this->creationOptions = $options;
     }

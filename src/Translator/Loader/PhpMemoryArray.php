@@ -27,10 +27,9 @@ class PhpMemoryArray implements RemoteLoaderInterface
      *
      * @param  string $locale
      * @param  string $textDomain
-     * @return TextDomain
      * @throws Exception\InvalidArgumentException
      */
-    public function load($locale, $textDomain)
+    public function load($locale, $textDomain): \Laminas\I18n\Translator\TextDomain
     {
         if (! is_array($this->messages)) {
             throw new Exception\InvalidArgumentException(

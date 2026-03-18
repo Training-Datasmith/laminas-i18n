@@ -252,7 +252,7 @@ class IsFloat extends AbstractValidator
         $groupSize = $groupSize === false ? 3 : $groupSize;
         assert(is_int($groupSize));
         $lastStringGroup = $this->wrapper->strlen($value) > $groupSize ?
-            $this->wrapper->substr($value, 0 - $groupSize) :
+            $this->wrapper->substr($value, -$groupSize) :
             $value;
 
         assert(is_string($lastStringGroup));

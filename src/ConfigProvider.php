@@ -23,7 +23,7 @@ class ConfigProvider
      *     locale: string|null,
      * }
      */
-    public function __invoke()
+    public function __invoke(): array
     {
         return [
             'dependencies' => $this->getDependencyConfig(),
@@ -39,7 +39,7 @@ class ConfigProvider
      *
      * @return ServiceManagerConfiguration
      */
-    public function getDependencyConfig()
+    public function getDependencyConfig(): array
     {
         return [
             'aliases'   => [
@@ -64,7 +64,7 @@ class ConfigProvider
      *
      * @return ServiceManagerConfiguration
      */
-    public function getFilterConfig()
+    public function getFilterConfig(): array
     {
         return [
             'aliases'   => [
@@ -99,7 +99,7 @@ class ConfigProvider
      *
      * @return ServiceManagerConfiguration
      */
-    public function getValidatorConfig()
+    public function getValidatorConfig(): array
     {
         return [
             'aliases'   => [
@@ -155,7 +155,7 @@ class ConfigProvider
      *
      * @return ServiceManagerConfiguration
      */
-    public function getViewHelperConfig()
+    public function getViewHelperConfig(): array
     {
         return [
             'aliases'   => [

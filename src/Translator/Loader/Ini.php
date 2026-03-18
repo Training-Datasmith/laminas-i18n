@@ -30,10 +30,9 @@ class Ini extends AbstractFileLoader
      *
      * @param  string $locale
      * @param  string $filename
-     * @return TextDomain
      * @throws Exception\InvalidArgumentException
      */
-    public function load($locale, $filename)
+    public function load($locale, $filename): \Laminas\I18n\Translator\TextDomain
     {
         $resolvedIncludePath = stream_resolve_include_path($filename);
         $fromIncludePath     = $resolvedIncludePath !== false ? $resolvedIncludePath : $filename;

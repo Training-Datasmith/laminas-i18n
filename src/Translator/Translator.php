@@ -115,10 +115,9 @@ class Translator implements TranslatorInterface
      * Instantiate a translator
      *
      * @param  array|Traversable $options
-     * @return static
      * @throws Exception\InvalidArgumentException
      */
-    public static function factory($options)
+    public static function factory($options): static
     {
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
@@ -243,7 +242,7 @@ class Translator implements TranslatorInterface
      * @param  string|null $locale
      * @return $this
      */
-    public function setLocale($locale)
+    public function setLocale($locale): static
     {
         $this->locale = $locale;
 
@@ -270,7 +269,7 @@ class Translator implements TranslatorInterface
      * @param  string|null $locale
      * @return $this
      */
-    public function setFallbackLocale($locale)
+    public function setFallbackLocale($locale): static
     {
         $this->fallbackLocale = $locale;
 
@@ -292,7 +291,7 @@ class Translator implements TranslatorInterface
      *
      * @return $this
      */
-    public function setCache(?CacheStorage $cache = null)
+    public function setCache(?CacheStorage $cache = null): static
     {
         $this->cache = $cache;
 
@@ -314,7 +313,7 @@ class Translator implements TranslatorInterface
      *
      * @return $this
      */
-    public function setPluginManager(LoaderPluginManager $pluginManager)
+    public function setPluginManager(LoaderPluginManager $pluginManager): static
     {
         $this->pluginManager = $pluginManager;
 
@@ -494,7 +493,7 @@ class Translator implements TranslatorInterface
         $filename,
         $textDomain = 'default',
         $locale = null
-    ) {
+    ): static {
         $locale ??= '*';
 
         if (! isset($this->files[$textDomain])) {
@@ -523,7 +522,7 @@ class Translator implements TranslatorInterface
         $baseDir,
         $pattern,
         $textDomain = 'default'
-    ) {
+    ): static {
         if (! isset($this->patterns[$textDomain])) {
             $this->patterns[$textDomain] = [];
         }
@@ -544,7 +543,7 @@ class Translator implements TranslatorInterface
      * @param  string $textDomain
      * @return $this
      */
-    public function addRemoteTranslations($type, $textDomain = 'default')
+    public function addRemoteTranslations($type, $textDomain = 'default'): static
     {
         if (! isset($this->remote[$textDomain])) {
             $this->remote[$textDomain] = [];
@@ -557,12 +556,8 @@ class Translator implements TranslatorInterface
 
     /**
      * Get the cache identifier for a specific textDomain and locale.
-     *
-     * @param  string $textDomain
-     * @param  string $locale
-     * @return string
      */
-    public function getCacheId($textDomain, $locale)
+    public function getCacheId(string $textDomain, string $locale): string
     {
         return 'Laminas_I18n_Translator_Messages_' . md5($textDomain . $locale);
     }
@@ -784,7 +779,7 @@ class Translator implements TranslatorInterface
      *
      * @return $this
      */
-    public function setEventManager(EventManagerInterface $events)
+    public function setEventManager(EventManagerInterface $events): static
     {
         $events->setIdentifiers([
             self::class,
@@ -810,7 +805,7 @@ class Translator implements TranslatorInterface
      *
      * @return $this
      */
-    public function enableEventManager()
+    public function enableEventManager(): static
     {
         $this->eventsEnabled = true;
         return $this;
@@ -821,7 +816,7 @@ class Translator implements TranslatorInterface
      *
      * @return $this
      */
-    public function disableEventManager()
+    public function disableEventManager(): static
     {
         $this->eventsEnabled = false;
         return $this;

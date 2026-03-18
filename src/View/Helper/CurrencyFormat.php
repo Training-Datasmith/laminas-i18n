@@ -139,7 +139,7 @@ class CurrencyFormat extends AbstractHelper
         $formattedNumber = $this->formatters[$formatterId]->formatCurrency($number, $currencyCode);
 
         if ($this->correctionNeeded) {
-            $formattedNumber = $this->fixICUBugForNoDecimals(
+            return $this->fixICUBugForNoDecimals(
                 $formattedNumber,
                 $this->formatters[$formatterId],
                 $locale,
@@ -248,7 +248,7 @@ class CurrencyFormat extends AbstractHelper
      * @param string          $currencyCode
      * @return string
      */
-    private function fixICUBugForNoDecimals($formattedNumber, NumberFormatter $formatter, $locale, $currencyCode)
+    private function fixICUBugForNoDecimals($formattedNumber, NumberFormatter $formatter, $locale, $currencyCode): ?string
     {
         $pattern = sprintf(
             '/\%s\d+(\s?%s)?$/u',
@@ -259,12 +259,7 @@ class CurrencyFormat extends AbstractHelper
         return preg_replace($pattern, '$1', $formattedNumber);
     }
 
-    /**
-     * @param string $locale
-     * @param string $currencyCode
-     * @return string
-     */
-    private function getCurrencySymbol($locale, $currencyCode)
+    private function getCurrencySymbol(string $locale, string $currencyCode): string
     {
         $numberFormatter = new NumberFormatter($locale . '@currency=' . $currencyCode, NumberFormatter::CURRENCY);
 

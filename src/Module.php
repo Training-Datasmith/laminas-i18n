@@ -21,7 +21,7 @@ class Module
      *     view_helpers: ServiceManagerConfiguration,
      * }
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         $provider = new ConfigProvider();
         return [
@@ -36,9 +36,8 @@ class Module
      * Register a specification for the TranslatorPluginManager with the ServiceListener.
      *
      * @param ModuleManager $moduleManager
-     * @return void
      */
-    public function init($moduleManager)
+    public function init($moduleManager): void
     {
         $event           = $moduleManager->getEvent();
         $container       = $event->getParam('ServiceManager');

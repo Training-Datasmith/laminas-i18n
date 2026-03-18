@@ -46,10 +46,9 @@ class Gettext extends AbstractFileLoader
      *
      * @param  string $locale
      * @param  string $filename
-     * @return TextDomain
      * @throws Exception\InvalidArgumentException
      */
-    public function load($locale, $filename)
+    public function load($locale, $filename): \Laminas\I18n\Translator\TextDomain
     {
         $resolvedFile = $this->resolveFile($filename);
         if ($resolvedFile === false) {
@@ -187,7 +186,7 @@ class Gettext extends AbstractFileLoader
      * @param  int $num
      * @return int
      */
-    protected function readIntegerList($num)
+    protected function readIntegerList($num): array|false
     {
         if ($this->littleEndian) {
             return unpack('V' . $num, fread($this->file, 4 * $num));

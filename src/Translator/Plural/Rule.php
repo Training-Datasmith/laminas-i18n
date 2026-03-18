@@ -24,13 +24,6 @@ class Rule
     protected static $parser;
 
     /**
-     * Abstract syntax tree.
-     *
-     * @var array
-     */
-    protected $ast;
-
-    /**
      * Create a new plural rule.
      *
      * @param int   $numPlurals
@@ -40,9 +33,12 @@ class Rule
          * Number of plurals in this rule.
          */
         protected $numPlurals,
-        array $ast
-    ) {
-        $this->ast = $ast;
+        /**
+         * Abstract syntax tree.
+         */
+        protected array $ast
+    )
+    {
     }
 
     /**
@@ -142,9 +138,8 @@ class Rule
      *
      * @param  string $string
      * @throws Exception\ParseException
-     * @return Rule
      */
-    public static function fromString($string)
+    public static function fromString($string): static
     {
         if (static::$parser === null) {
             static::$parser = new Parser();
@@ -177,10 +172,8 @@ class Rule
      *
      * Theoretically we could just use the given Symbol, but that one is not
      * so easy to serialize and also takes up more memory.
-     *
-     * @return array
      */
-    protected static function createAst(Symbol $symbol)
+    protected static function createAst(Symbol $symbol): array
     {
         $ast = ['id' => $symbol->id, 'arguments' => []];
 

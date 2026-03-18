@@ -37,7 +37,7 @@ class TextDomain extends ArrayObject
      *
      * @return $this
      */
-    public function setPluralRule(PluralRule $rule)
+    public function setPluralRule(PluralRule $rule): static
     {
         $this->pluralRule = $rule;
         return $this;
@@ -60,10 +60,8 @@ class TextDomain extends ArrayObject
 
     /**
      * Checks whether the text domain has a plural rule.
-     *
-     * @return bool
      */
-    public function hasPluralRule()
+    public function hasPluralRule(): bool
     {
         return $this->pluralRule !== null;
     }
@@ -96,7 +94,7 @@ class TextDomain extends ArrayObject
      * @param self<TNewKey, TNewValue> $textDomain
      * @psalm-self-out self<TKey|TNewKey, TValue|TNewValue>
      */
-    public function merge(TextDomain $textDomain)
+    public function merge(TextDomain $textDomain): static
     {
         if ($this->hasPluralRule() && $textDomain->hasPluralRule()) {
             if ($this->getPluralRule()->getNumPlurals() !== $textDomain->getPluralRule()->getNumPlurals()) {

@@ -85,10 +85,8 @@ class HelperConfig implements ConfigInterface
     /**
      * Configure the provided service manager instance with the configuration
      * in this class.
-     *
-     * @return ServiceManager
      */
-    public function configureServiceManager(ServiceManager $serviceManager)
+    public function configureServiceManager(ServiceManager $serviceManager): ServiceManager
     {
         if (method_exists($serviceManager, 'configure')) {
             $serviceManager->configure($this->toArray());
@@ -109,10 +107,8 @@ class HelperConfig implements ConfigInterface
      * Cast configuration to an array.
      *
      * Provided for v3 compatibility
-     *
-     * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'aliases'   => $this->aliases,

@@ -99,11 +99,10 @@ class LoaderPluginManager extends AbstractPluginManager
      * Loader\FileLoaderInterface or Loader\RemoteLoaderInterface.
      *
      * @param  mixed $plugin
-     * @return void
      * @throws Exception\RuntimeException If invalid.
      * @psalm-assert InstanceType $plugin
      */
-    public function validate($plugin)
+    public function validate($plugin): void
     {
         if ($plugin instanceof FileLoaderInterface || $plugin instanceof RemoteLoaderInterface) {
             // we're okay
@@ -130,7 +129,7 @@ class LoaderPluginManager extends AbstractPluginManager
      * @throws Exception\RuntimeException
      * @psalm-assert InstanceType $plugin
      */
-    public function validatePlugin($plugin)
+    public function validatePlugin($plugin): void
     {
         try {
             $this->validate($plugin);

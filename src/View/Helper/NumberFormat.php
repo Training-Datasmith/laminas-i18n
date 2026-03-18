@@ -71,7 +71,6 @@ class NumberFormat extends AbstractHelper
      * @param  int|null    $formatType
      * @param  string|null $locale
      * @param  int|null    $decimals
-     * @param  array|null  $textAttributes
      * @return string
      */
     public function __invoke(
