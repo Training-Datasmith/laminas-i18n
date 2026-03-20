@@ -75,7 +75,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "LaminasTest\\I18n\\": "test/"
+            "Laminas_Test\\I18n\\": "test/"
         }
     },
     "scripts": {
