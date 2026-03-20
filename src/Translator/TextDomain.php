@@ -1,16 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\I18n\Translator;
 
 use function array_replace;
-
 use ArrayObject;
 use Laminas\I18n\Exception;
-
 use Laminas\I18n\Translator\Plural\Rule as PluralRule;
-
 /**
  * Text domain.
  *
@@ -19,70 +15,62 @@ use Laminas\I18n\Translator\Plural\Rule as PluralRule;
  * @extends ArrayObject<TKey, TValue>
  * @final
  */
-class TextDomain extends ArrayObject
+class Text_Domain extends ArrayObject
 {
     /**
      * Plural rule.
      *
      * @var PluralRule|null
      */
-    protected $pluralRule;
-
+    protected $plural_rule;
     /**
      * Default plural rule shared between instances.
      *
      * @var PluralRule|null
      */
-    protected static $defaultPluralRule;
-
+    protected static $default_plural_rule;
     /**
      * Set the plural rule
      *
      * @return $this
      */
-    public function setPluralRule(PluralRule $rule): static
+    public function set_plural_rule(Plural_Rule $rule): static
     {
-        $this->pluralRule = $rule;
+        $this->plural_rule = $rule;
         return $this;
     }
-
     /**
      * Get the plural rule.
      *
      * @param  bool $fallbackToDefaultRule
      * @return PluralRule|null
      */
-    public function getPluralRule($fallbackToDefaultRule = true)
+    public function get_plural_rule($fallback_to_default_rule = true)
     {
-        if ($this->pluralRule === null && $fallbackToDefaultRule) {
-            return static::getDefaultPluralRule();
+        if ($this->plural_rule === null && $fallback_to_default_rule) {
+            return static::get_default_plural_rule();
         }
-
-        return $this->pluralRule;
+        return $this->plural_rule;
     }
-
     /**
      * Checks whether the text domain has a plural rule.
      */
-    public function hasPluralRule(): bool
+    public function has_plural_rule(): bool
     {
-        return $this->pluralRule !== null;
+        return $this->plural_rule !== null;
     }
-
     /**
      * Returns a shared default plural rule.
      *
      * @return PluralRule
      */
-    public static function getDefaultPluralRule()
+    public static function get_default_plural_rule()
     {
-        if (static::$defaultPluralRule === null) {
-            static::$defaultPluralRule = PluralRule::fromString('nplurals=2; plural=n != 1;');
+        if (static::$default_plural_rule === null) {
+            static::$default_plural_rule = Plural_Rule::from_string('nplurals=2; plural=n != 1;');
         }
-
-        return static::$defaultPluralRule;
+        return static::$default_plural_rule;
     }
-
     /**
      * Merge another text domain with the current one.
      *
@@ -97,25 +85,16 @@ class TextDomain extends ArrayObject
      * @param self<TNewKey, TNewValue> $textDomain
      * @psalm-self-out self<TKey|TNewKey, TValue|TNewValue>
      */
-    public function merge(TextDomain $textDomain): static
+    public function merge(Text_Domain $text_domain): static
     {
-        if ($this->hasPluralRule() && $textDomain->hasPluralRule()) {
-            if ($this->getPluralRule()->getNumPlurals() !== $textDomain->getPluralRule()->getNumPlurals()) {
-                throw new Exception\RuntimeException(
-                    'Plural rule of merging text domain is not compatible with the current one'
-                );
+        if ($this->has_plural_rule() && $text_domain->has_plural_rule()) {
+            if ($this->get_plural_rule()->get_num_plurals() !== $text_domain->get_plural_rule()->get_num_plurals()) {
+                throw new Exception\RuntimeException('Plural rule of merging text domain is not compatible with the current one');
             }
-        } elseif ($textDomain->hasPluralRule()) {
-            $this->setPluralRule($textDomain->getPluralRule());
+        } elseif ($text_domain->has_plural_rule()) {
+            $this->set_plural_rule($text_domain->get_plural_rule());
         }
-
-        $this->exchangeArray(
-            array_replace(
-                $this->getArrayCopy(),
-                $textDomain->getArrayCopy()
-            )
-        );
-
+        $this->exchange_array(array_replace($this->get_array_copy(), $text_domain->get_array_copy()));
         return $this;
     }
 }

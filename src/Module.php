@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\I18n;
 
-use Laminas\ModuleManager\ModuleManager;
-use Laminas\ServiceManager\ServiceManager;
-
+use Laminas\Module_Manager\Module_Manager;
+use Laminas\Service_Manager\Service_Manager;
 /**
  * @psalm-import-type ServiceManagerConfiguration from ServiceManager
  * @final
@@ -23,33 +21,21 @@ class Module
      *     view_helpers: ServiceManagerConfiguration,
      * }
      */
-    public function getConfig(): array
+    public function get_config(): array
     {
-        $provider = new ConfigProvider();
-        return [
-            'filters'         => $provider->getFilterConfig(),
-            'service_manager' => $provider->getDependencyConfig(),
-            'validators'      => $provider->getValidatorConfig(),
-            'view_helpers'    => $provider->getViewHelperConfig(),
-        ];
+        $provider = new Config_Provider();
+        return ['filters' => $provider->get_filter_config(), 'service_manager' => $provider->get_dependency_config(), 'validators' => $provider->get_validator_config(), 'view_helpers' => $provider->get_view_helper_config()];
     }
-
     /**
      * Register a specification for the TranslatorPluginManager with the ServiceListener.
      *
      * @param ModuleManager $moduleManager
      */
-    public function init($moduleManager): void
+    public function init($module_manager): void
     {
-        $event           = $moduleManager->getEvent();
-        $container       = $event->getParam('ServiceManager');
-        $serviceListener = $container->get('ServiceListener');
-
-        $serviceListener->addServiceManager(
-            'TranslatorPluginManager',
-            'translator_plugins',
-            'Laminas\ModuleManager\Feature\TranslatorPluginProviderInterface',
-            'getTranslatorPluginConfig'
-        );
+        $event = $module_manager->get_event();
+        $container = $event->get_param('ServiceManager');
+        $service_listener = $container->get('ServiceListener');
+        $service_listener->add_service_manager('TranslatorPluginManager', 'translator_plugins', 'Laminas\ModuleManager\Feature\TranslatorPluginProviderInterface', 'getTranslatorPluginConfig');
     }
 }

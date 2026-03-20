@@ -1,18 +1,16 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\I18n;
 
-use Laminas\ServiceManager\Factory\InvokableFactory;
-use Laminas\ServiceManager\ServiceManager;
-use Laminas\Translator\TranslatorInterface;
-
+use Laminas\Service_Manager\Factory\Invokable_Factory;
+use Laminas\Service_Manager\Service_Manager;
+use Laminas\Translator\Translator_Interface;
 /**
  * @psalm-import-type ServiceManagerConfiguration from ServiceManager
  * @final
  */
-class ConfigProvider
+class Config_Provider
 {
     /**
      * Return general-purpose laminas-i18n configuration.
@@ -27,129 +25,90 @@ class ConfigProvider
      */
     public function __invoke(): array
     {
-        return [
-            'dependencies' => $this->getDependencyConfig(),
-            'filters'      => $this->getFilterConfig(),
-            'validators'   => $this->getValidatorConfig(),
-            'view_helpers' => $this->getViewHelperConfig(),
-            'locale'       => null,
-        ];
+        return ['dependencies' => $this->get_dependency_config(), 'filters' => $this->get_filter_config(), 'validators' => $this->get_validator_config(), 'view_helpers' => $this->get_view_helper_config(), 'locale' => null];
     }
-
     /**
      * Return application-level dependency configuration.
      *
      * @return ServiceManagerConfiguration
      */
-    public function getDependencyConfig(): array
+    public function get_dependency_config(): array
     {
-        return [
-            'aliases'   => [
-                'TranslatorPluginManager' => Translator\LoaderPluginManager::class,
-
-                // Legacy Zend Framework aliases
-                'Zend\I18n\Translator\TranslatorInterface' => Translator\TranslatorInterface::class,
-                'Zend\I18n\Translator\LoaderPluginManager' => Translator\LoaderPluginManager::class,
-                Geography\CountryCodeListInterface::class  => Geography\DefaultCountryCodeList::class,
-                TranslatorInterface::class                 => Translator\TranslatorInterface::class,
-            ],
-            'factories' => [
-                Translator\TranslatorInterface::class   => Translator\TranslatorServiceFactory::class,
-                Translator\LoaderPluginManager::class   => Translator\LoaderPluginManagerFactory::class,
-                Geography\DefaultCountryCodeList::class => Geography\DefaultCountryCodeListFactory::class,
-            ],
-        ];
+        return ['aliases' => [
+            'TranslatorPluginManager' => Translator\Loader_Plugin_Manager::class,
+            // Legacy Zend Framework aliases
+            'Zend\I18n\Translator\TranslatorInterface' => Translator\Translator_Interface::class,
+            'Zend\I18n\Translator\LoaderPluginManager' => Translator\Loader_Plugin_Manager::class,
+            Geography\Country_Code_List_Interface::class => Geography\Default_Country_Code_List::class,
+            Translator_Interface::class => Translator\Translator_Interface::class,
+        ], 'factories' => [Translator\Translator_Interface::class => Translator\Translator_Service_Factory::class, Translator\Loader_Plugin_Manager::class => Translator\Loader_Plugin_Manager_Factory::class, Geography\Default_Country_Code_List::class => Geography\Default_Country_Code_List_Factory::class]];
     }
-
     /**
      * Return laminas-filter configuration.
      *
      * @return ServiceManagerConfiguration
      */
-    public function getFilterConfig(): array
+    public function get_filter_config(): array
     {
-        return [
-            'aliases'   => [
-                'alnum'        => Filter\Alnum::class,
-                'Alnum'        => Filter\Alnum::class,
-                'alpha'        => Filter\Alpha::class,
-                'Alpha'        => Filter\Alpha::class,
-                'numberformat' => Filter\NumberFormat::class,
-                'numberFormat' => Filter\NumberFormat::class,
-                'NumberFormat' => Filter\NumberFormat::class,
-                'numberparse'  => Filter\NumberParse::class,
-                'numberParse'  => Filter\NumberParse::class,
-                'NumberParse'  => Filter\NumberParse::class,
-
-                // Legacy Zend Framework aliases
-                'Zend\I18n\Filter\Alnum'        => Filter\Alnum::class,
-                'Zend\I18n\Filter\Alpha'        => Filter\Alpha::class,
-                'Zend\I18n\Filter\NumberFormat' => Filter\NumberFormat::class,
-                'Zend\I18n\Filter\NumberParse'  => Filter\NumberParse::class,
-            ],
-            'factories' => [
-                Filter\Alnum::class        => InvokableFactory::class,
-                Filter\Alpha::class        => InvokableFactory::class,
-                Filter\NumberFormat::class => InvokableFactory::class,
-                Filter\NumberParse::class  => InvokableFactory::class,
-            ],
-        ];
+        return ['aliases' => [
+            'alnum' => Filter\Alnum::class,
+            'Alnum' => Filter\Alnum::class,
+            'alpha' => Filter\Alpha::class,
+            'Alpha' => Filter\Alpha::class,
+            'numberformat' => Filter\Number_Format::class,
+            'numberFormat' => Filter\Number_Format::class,
+            'NumberFormat' => Filter\Number_Format::class,
+            'numberparse' => Filter\Number_Parse::class,
+            'numberParse' => Filter\Number_Parse::class,
+            'NumberParse' => Filter\Number_Parse::class,
+            // Legacy Zend Framework aliases
+            'Zend\I18n\Filter\Alnum' => Filter\Alnum::class,
+            'Zend\I18n\Filter\Alpha' => Filter\Alpha::class,
+            'Zend\I18n\Filter\NumberFormat' => Filter\Number_Format::class,
+            'Zend\I18n\Filter\NumberParse' => Filter\Number_Parse::class,
+        ], 'factories' => [Filter\Alnum::class => Invokable_Factory::class, Filter\Alpha::class => Invokable_Factory::class, Filter\Number_Format::class => Invokable_Factory::class, Filter\Number_Parse::class => Invokable_Factory::class]];
     }
-
     /**
      * Return laminas-validator configuration.
      *
      * @return ServiceManagerConfiguration
      */
-    public function getValidatorConfig(): array
+    public function get_validator_config(): array
     {
-        return [
-            'aliases'   => [
-                'alnum'       => Validator\Alnum::class,
-                'Alnum'       => Validator\Alnum::class,
-                'alpha'       => Validator\Alpha::class,
-                'Alpha'       => Validator\Alpha::class,
-                'datetime'    => Validator\DateTime::class,
-                'dateTime'    => Validator\DateTime::class,
-                'DateTime'    => Validator\DateTime::class,
-                'float'       => Validator\IsFloat::class,
-                'Float'       => Validator\IsFloat::class,
-                'int'         => Validator\IsInt::class,
-                'Int'         => Validator\IsInt::class,
-                'isfloat'     => Validator\IsFloat::class,
-                'isFloat'     => Validator\IsFloat::class,
-                'IsFloat'     => Validator\IsFloat::class,
-                'isint'       => Validator\IsInt::class,
-                'isInt'       => Validator\IsInt::class,
-                'IsInt'       => Validator\IsInt::class,
-                'phonenumber' => Validator\PhoneNumber::class,
-                'phoneNumber' => Validator\PhoneNumber::class,
-                'PhoneNumber' => Validator\PhoneNumber::class,
-                'postcode'    => Validator\PostCode::class,
-                'postCode'    => Validator\PostCode::class,
-                'PostCode'    => Validator\PostCode::class,
-
-                // Legacy Zend Framework aliases
-                'Zend\I18n\Validator\Alnum'       => Validator\Alnum::class,
-                'Zend\I18n\Validator\Alpha'       => Validator\Alpha::class,
-                'Zend\I18n\Validator\DateTime'    => Validator\DateTime::class,
-                'Zend\I18n\Validator\IsFloat'     => Validator\IsFloat::class,
-                'Zend\I18n\Validator\IsInt'       => Validator\IsInt::class,
-                'Zend\I18n\Validator\PhoneNumber' => Validator\PhoneNumber::class,
-                'Zend\I18n\Validator\PostCode'    => Validator\PostCode::class,
-            ],
-            'factories' => [
-                Validator\Alnum::class       => InvokableFactory::class,
-                Validator\Alpha::class       => InvokableFactory::class,
-                Validator\DateTime::class    => InvokableFactory::class,
-                Validator\IsFloat::class     => InvokableFactory::class,
-                Validator\IsInt::class       => InvokableFactory::class,
-                Validator\PhoneNumber::class => InvokableFactory::class,
-                Validator\PostCode::class    => InvokableFactory::class,
-            ],
-        ];
+        return ['aliases' => [
+            'alnum' => Validator\Alnum::class,
+            'Alnum' => Validator\Alnum::class,
+            'alpha' => Validator\Alpha::class,
+            'Alpha' => Validator\Alpha::class,
+            'datetime' => Validator\DateTime::class,
+            'dateTime' => Validator\DateTime::class,
+            'DateTime' => Validator\DateTime::class,
+            'float' => Validator\Is_Float::class,
+            'Float' => Validator\Is_Float::class,
+            'int' => Validator\Is_Int::class,
+            'Int' => Validator\Is_Int::class,
+            'isfloat' => Validator\Is_Float::class,
+            'isFloat' => Validator\Is_Float::class,
+            'IsFloat' => Validator\Is_Float::class,
+            'isint' => Validator\Is_Int::class,
+            'isInt' => Validator\Is_Int::class,
+            'IsInt' => Validator\Is_Int::class,
+            'phonenumber' => Validator\Phone_Number::class,
+            'phoneNumber' => Validator\Phone_Number::class,
+            'PhoneNumber' => Validator\Phone_Number::class,
+            'postcode' => Validator\Post_Code::class,
+            'postCode' => Validator\Post_Code::class,
+            'PostCode' => Validator\Post_Code::class,
+            // Legacy Zend Framework aliases
+            'Zend\I18n\Validator\Alnum' => Validator\Alnum::class,
+            'Zend\I18n\Validator\Alpha' => Validator\Alpha::class,
+            'Zend\I18n\Validator\DateTime' => Validator\DateTime::class,
+            'Zend\I18n\Validator\IsFloat' => Validator\Is_Float::class,
+            'Zend\I18n\Validator\IsInt' => Validator\Is_Int::class,
+            'Zend\I18n\Validator\PhoneNumber' => Validator\Phone_Number::class,
+            'Zend\I18n\Validator\PostCode' => Validator\Post_Code::class,
+        ], 'factories' => [Validator\Alnum::class => Invokable_Factory::class, Validator\Alpha::class => Invokable_Factory::class, Validator\DateTime::class => Invokable_Factory::class, Validator\Is_Float::class => Invokable_Factory::class, Validator\Is_Int::class => Invokable_Factory::class, Validator\Phone_Number::class => Invokable_Factory::class, Validator\Post_Code::class => Invokable_Factory::class]];
     }
-
     /**
      * Return laminas-view helper configuration.
      *
@@ -157,45 +116,33 @@ class ConfigProvider
      *
      * @return ServiceManagerConfiguration
      */
-    public function getViewHelperConfig(): array
+    public function get_view_helper_config(): array
     {
-        return [
-            'aliases'   => [
-                'countryCodeDataList' => View\Helper\CountryCodeDataList::class,
-                'currencyformat'      => View\Helper\CurrencyFormat::class,
-                'currencyFormat'      => View\Helper\CurrencyFormat::class,
-                'CurrencyFormat'      => View\Helper\CurrencyFormat::class,
-                'dateformat'          => View\Helper\DateFormat::class,
-                'dateFormat'          => View\Helper\DateFormat::class,
-                'DateFormat'          => View\Helper\DateFormat::class,
-                'numberformat'        => View\Helper\NumberFormat::class,
-                'numberFormat'        => View\Helper\NumberFormat::class,
-                'NumberFormat'        => View\Helper\NumberFormat::class,
-                'plural'              => View\Helper\Plural::class,
-                'Plural'              => View\Helper\Plural::class,
-                'translate'           => View\Helper\Translate::class,
-                'Translate'           => View\Helper\Translate::class,
-                'translateplural'     => View\Helper\TranslatePlural::class,
-                'translatePlural'     => View\Helper\TranslatePlural::class,
-                'TranslatePlural'     => View\Helper\TranslatePlural::class,
-
-                // Legacy Zend Framework aliases
-                'Zend\I18n\View\Helper\CurrencyFormat'  => View\Helper\CurrencyFormat::class,
-                'Zend\I18n\View\Helper\DateFormat'      => View\Helper\DateFormat::class,
-                'Zend\I18n\View\Helper\NumberFormat'    => View\Helper\NumberFormat::class,
-                'Zend\I18n\View\Helper\Plural'          => View\Helper\Plural::class,
-                'Zend\I18n\View\Helper\Translate'       => View\Helper\Translate::class,
-                'Zend\I18n\View\Helper\TranslatePlural' => View\Helper\TranslatePlural::class,
-            ],
-            'factories' => [
-                View\Helper\CountryCodeDataList::class => View\Helper\Container\CountryCodeDataListFactory::class,
-                View\Helper\CurrencyFormat::class      => InvokableFactory::class,
-                View\Helper\DateFormat::class          => InvokableFactory::class,
-                View\Helper\NumberFormat::class        => InvokableFactory::class,
-                View\Helper\Plural::class              => InvokableFactory::class,
-                View\Helper\Translate::class           => InvokableFactory::class,
-                View\Helper\TranslatePlural::class     => InvokableFactory::class,
-            ],
-        ];
+        return ['aliases' => [
+            'countryCodeDataList' => View\Helper\Country_Code_Data_List::class,
+            'currencyformat' => View\Helper\Currency_Format::class,
+            'currencyFormat' => View\Helper\Currency_Format::class,
+            'CurrencyFormat' => View\Helper\Currency_Format::class,
+            'dateformat' => View\Helper\Date_Format::class,
+            'dateFormat' => View\Helper\Date_Format::class,
+            'DateFormat' => View\Helper\Date_Format::class,
+            'numberformat' => View\Helper\Number_Format::class,
+            'numberFormat' => View\Helper\Number_Format::class,
+            'NumberFormat' => View\Helper\Number_Format::class,
+            'plural' => View\Helper\Plural::class,
+            'Plural' => View\Helper\Plural::class,
+            'translate' => View\Helper\Translate::class,
+            'Translate' => View\Helper\Translate::class,
+            'translateplural' => View\Helper\Translate_Plural::class,
+            'translatePlural' => View\Helper\Translate_Plural::class,
+            'TranslatePlural' => View\Helper\Translate_Plural::class,
+            // Legacy Zend Framework aliases
+            'Zend\I18n\View\Helper\CurrencyFormat' => View\Helper\Currency_Format::class,
+            'Zend\I18n\View\Helper\DateFormat' => View\Helper\Date_Format::class,
+            'Zend\I18n\View\Helper\NumberFormat' => View\Helper\Number_Format::class,
+            'Zend\I18n\View\Helper\Plural' => View\Helper\Plural::class,
+            'Zend\I18n\View\Helper\Translate' => View\Helper\Translate::class,
+            'Zend\I18n\View\Helper\TranslatePlural' => View\Helper\Translate_Plural::class,
+        ], 'factories' => [View\Helper\Country_Code_Data_List::class => View\Helper\Container\Country_Code_Data_List_Factory::class, View\Helper\Currency_Format::class => Invokable_Factory::class, View\Helper\Date_Format::class => Invokable_Factory::class, View\Helper\Number_Format::class => Invokable_Factory::class, View\Helper\Plural::class => Invokable_Factory::class, View\Helper\Translate::class => Invokable_Factory::class, View\Helper\Translate_Plural::class => Invokable_Factory::class]];
     }
 }

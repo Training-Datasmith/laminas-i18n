@@ -1,19 +1,17 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\I18n\Translator;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Psr\Container\ContainerInterface;
-
+use Laminas\Service_Manager\Factory_Interface;
+use Laminas\Service_Manager\Service_Locator_Interface;
+use Psr\Container\Container_Interface;
 /**
  * Translator.
  *
  * @final
  */
-class TranslatorServiceFactory implements FactoryInterface
+class Translator_Service_Factory implements Factory_Interface
 {
     /**
      * Create a Translator instance.
@@ -21,18 +19,17 @@ class TranslatorServiceFactory implements FactoryInterface
      * @param string $requestedName
      * @return Translator
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(Container_Interface $container, $requested_name, ?array $options = null)
     {
         // Configure the translator
-        $config     = $container->get('config');
-        $trConfig   = $config['translator'] ?? [];
-        $translator = Translator::factory($trConfig);
+        $config = $container->get('config');
+        $tr_config = $config['translator'] ?? [];
+        $translator = Translator::factory($tr_config);
         if ($container->has('TranslatorPluginManager')) {
-            $translator->setPluginManager($container->get('TranslatorPluginManager'));
+            $translator->set_plugin_manager($container->get('TranslatorPluginManager'));
         }
         return $translator;
     }
-
     /**
      * laminas-servicemanager v2 factory for creating Translator instance.
      *
@@ -43,8 +40,8 @@ class TranslatorServiceFactory implements FactoryInterface
      *
      * @return Translator
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function create_service(Service_Locator_Interface $service_locator)
     {
-        return $this($serviceLocator, Translator::class);
+        return $this($service_locator, Translator::class);
     }
 }

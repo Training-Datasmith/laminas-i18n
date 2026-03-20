@@ -1,18 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\I18n\Filter;
 
 use function is_float;
-
 use function is_int;
 use function is_scalar;
-
-use Laminas\Stdlib\ErrorHandler;
-
+use Laminas\Stdlib\Error_Handler;
 /** @final */
-class NumberFormat extends NumberParse
+class Number_Format extends Number_Parse
 {
     /**
      * Defined by Laminas\Filter\FilterInterface
@@ -24,24 +20,19 @@ class NumberFormat extends NumberParse
      */
     public function filter($value)
     {
-        if (! is_scalar($value)) {
+        if (!is_scalar($value)) {
             return $value;
         }
-
-        if (! is_int($value) && ! is_float($value)) {
+        if (!is_int($value) && !is_float($value)) {
             $result = parent::filter($value);
         } else {
-            ErrorHandler::start();
-
-            $result = $this->getFormatter()->format($value, $this->getType());
-
-            ErrorHandler::stop();
+            Error_Handler::start();
+            $result = $this->get_formatter()->format($value, $this->get_type());
+            Error_Handler::stop();
         }
-
         if (false !== $result) {
             return $result;
         }
-
         return $value;
     }
 }

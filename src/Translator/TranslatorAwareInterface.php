@@ -1,10 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\I18n\Translator;
 
-interface TranslatorAwareInterface
+interface Translator_Aware_Interface
 {
     /**
      * Sets translator to use in helper
@@ -13,22 +12,19 @@ interface TranslatorAwareInterface
      * @param  string|null              $textDomain Default is null, which skips setTranslatorTextDomain
      * @return $this
      */
-    public function setTranslator(?TranslatorInterface $translator = null, $textDomain = null);
-
+    public function set_translator(?Translator_Interface $translator = null, $text_domain = null);
     /**
      * Returns translator used in object
      *
      * @return TranslatorInterface|null
      */
-    public function getTranslator();
-
+    public function get_translator();
     /**
      * Checks if the object has a translator
      *
      * @return bool
      */
-    public function hasTranslator();
-
+    public function has_translator();
     /**
      * Sets whether translator is enabled and should be used
      *
@@ -36,27 +32,24 @@ interface TranslatorAwareInterface
      *                       Default is true.
      * @return $this
      */
-    public function setTranslatorEnabled($enabled = true);
-
+    public function set_translator_enabled($enabled = true);
     /**
      * Returns whether translator is enabled and should be used
      *
      * @return bool
      */
-    public function isTranslatorEnabled();
-
+    public function is_translator_enabled();
     /**
      * Set translation text domain
      *
      * @param  string $textDomain
      * @return $this
      */
-    public function setTranslatorTextDomain($textDomain = 'default');
-
+    public function set_translator_text_domain($text_domain = 'default');
     /**
      * Return the translation text domain
      *
      * @return string
      */
-    public function getTranslatorTextDomain();
+    public function get_translator_text_domain();
 }

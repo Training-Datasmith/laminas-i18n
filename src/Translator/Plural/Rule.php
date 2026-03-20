@@ -1,18 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\I18n\Translator\Plural;
 
 use function abs;
-
 use function floor;
-
 use Laminas\I18n\Exception;
-
 use function preg_match;
 use function sprintf;
-
 /**
  * Plural rule evaluator.
  *
@@ -26,7 +21,6 @@ class Rule
      * @var Parser
      */
     protected static $parser;
-
     /**
      * Create a new plural rule.
      *
@@ -36,14 +30,14 @@ class Rule
         /**
          * Number of plurals in this rule.
          */
-        protected $numPlurals,
+        protected $num_plurals,
         /**
          * Abstract syntax tree.
          */
         protected array $ast
-    ) {
+    )
+    {
     }
-
     /**
      * Evaluate a number and return the plural index.
      *
@@ -53,27 +47,21 @@ class Rule
      */
     public function evaluate($number)
     {
-        $result = $this->evaluateAstPart($this->ast, abs((int) $number));
-
-        if ($result < 0 || $result >= $this->numPlurals) {
-            throw new Exception\RangeException(
-                sprintf('Calculated result %s is between 0 and %d', $result, $this->numPlurals - 1)
-            );
+        $result = $this->evaluate_ast_part($this->ast, abs((int) $number));
+        if ($result < 0 || $result >= $this->num_plurals) {
+            throw new Exception\RangeException(sprintf('Calculated result %s is between 0 and %d', $result, $this->num_plurals - 1));
         }
-
         return $result;
     }
-
     /**
      * Get number of possible plural forms.
      *
      * @return int
      */
-    public function getNumPlurals()
+    public function get_num_plurals()
     {
-        return $this->numPlurals;
+        return $this->num_plurals;
     }
-
     /**
      * Evaluate a part of an ast.
      *
@@ -81,129 +69,81 @@ class Rule
      * @return int
      * @throws Exception\ParseException
      */
-    protected function evaluateAstPart(array $ast, $number)
+    protected function evaluate_ast_part(array $ast, $number)
     {
         return match ($ast['id']) {
             'number' => $ast['arguments'][0],
             'n' => $number,
-            '+' => $this->evaluateAstPart($ast['arguments'][0], $number)
-                   + $this->evaluateAstPart($ast['arguments'][1], $number),
-            '-' => $this->evaluateAstPart($ast['arguments'][0], $number)
-                   - $this->evaluateAstPart($ast['arguments'][1], $number),
+            '+' => $this->evaluate_ast_part($ast['arguments'][0], $number) + $this->evaluate_ast_part($ast['arguments'][1], $number),
+            '-' => $this->evaluate_ast_part($ast['arguments'][0], $number) - $this->evaluate_ast_part($ast['arguments'][1], $number),
             // Integer division
-            '/' => floor(
-                $this->evaluateAstPart($ast['arguments'][0], $number)
-                / $this->evaluateAstPart($ast['arguments'][1], $number)
-            ),
-            '*' => $this->evaluateAstPart($ast['arguments'][0], $number)
-                   * $this->evaluateAstPart($ast['arguments'][1], $number),
-            '%' => $this->evaluateAstPart($ast['arguments'][0], $number)
-                   % $this->evaluateAstPart($ast['arguments'][1], $number),
-            '>' => $this->evaluateAstPart($ast['arguments'][0], $number)
-                   > $this->evaluateAstPart($ast['arguments'][1], $number)
-                   ? 1 : 0,
-            '>=' => $this->evaluateAstPart($ast['arguments'][0], $number)
-                   >= $this->evaluateAstPart($ast['arguments'][1], $number)
-                   ? 1 : 0,
-            '<' => $this->evaluateAstPart($ast['arguments'][0], $number)
-                   < $this->evaluateAstPart($ast['arguments'][1], $number)
-                   ? 1 : 0,
-            '<=' => $this->evaluateAstPart($ast['arguments'][0], $number)
-                   <= $this->evaluateAstPart($ast['arguments'][1], $number)
-                   ? 1 : 0,
+            '/' => floor($this->evaluate_ast_part($ast['arguments'][0], $number) / $this->evaluate_ast_part($ast['arguments'][1], $number)),
+            '*' => $this->evaluate_ast_part($ast['arguments'][0], $number) * $this->evaluate_ast_part($ast['arguments'][1], $number),
+            '%' => $this->evaluate_ast_part($ast['arguments'][0], $number) % $this->evaluate_ast_part($ast['arguments'][1], $number),
+            '>' => $this->evaluate_ast_part($ast['arguments'][0], $number) > $this->evaluate_ast_part($ast['arguments'][1], $number) ? 1 : 0,
+            '>=' => $this->evaluate_ast_part($ast['arguments'][0], $number) >= $this->evaluate_ast_part($ast['arguments'][1], $number) ? 1 : 0,
+            '<' => $this->evaluate_ast_part($ast['arguments'][0], $number) < $this->evaluate_ast_part($ast['arguments'][1], $number) ? 1 : 0,
+            '<=' => $this->evaluate_ast_part($ast['arguments'][0], $number) <= $this->evaluate_ast_part($ast['arguments'][1], $number) ? 1 : 0,
             // @codingStandardsIgnoreStart
-            '==' => $this->evaluateAstPart($ast['arguments'][0], $number)
-                   == $this->evaluateAstPart($ast['arguments'][1], $number)
-                   ? 1 : 0,
-            '!=' => $this->evaluateAstPart($ast['arguments'][0], $number)
-                   != $this->evaluateAstPart($ast['arguments'][1], $number)
-                   ? 1 : 0,
-            '&&' => $this->evaluateAstPart($ast['arguments'][0], $number)
-                   && $this->evaluateAstPart($ast['arguments'][1], $number)
-                   ? 1 : 0,
-            '||' => $this->evaluateAstPart($ast['arguments'][0], $number)
-                   || $this->evaluateAstPart($ast['arguments'][1], $number)
-                   ? 1 : 0,
-            '!' => ! $this->evaluateAstPart($ast['arguments'][0], $number)
-                   ? 1 : 0,
-            '?' => $this->evaluateAstPart($ast['arguments'][0], $number)
-                   ? $this->evaluateAstPart($ast['arguments'][1], $number)
-                   : $this->evaluateAstPart($ast['arguments'][2], $number),
-            default => throw new Exception\ParseException(sprintf(
-                'Unknown token: %s',
-                $ast['id']
-            )),
+            '==' => $this->evaluate_ast_part($ast['arguments'][0], $number) == $this->evaluate_ast_part($ast['arguments'][1], $number) ? 1 : 0,
+            '!=' => $this->evaluate_ast_part($ast['arguments'][0], $number) != $this->evaluate_ast_part($ast['arguments'][1], $number) ? 1 : 0,
+            '&&' => $this->evaluate_ast_part($ast['arguments'][0], $number) && $this->evaluate_ast_part($ast['arguments'][1], $number) ? 1 : 0,
+            '||' => $this->evaluate_ast_part($ast['arguments'][0], $number) || $this->evaluate_ast_part($ast['arguments'][1], $number) ? 1 : 0,
+            '!' => !$this->evaluate_ast_part($ast['arguments'][0], $number) ? 1 : 0,
+            '?' => $this->evaluate_ast_part($ast['arguments'][0], $number) ? $this->evaluate_ast_part($ast['arguments'][1], $number) : $this->evaluate_ast_part($ast['arguments'][2], $number),
+            default => throw new Exception\Parse_Exception(sprintf('Unknown token: %s', $ast['id'])),
         };
     }
-
     /**
      * Create a new rule from a string.
      *
      * @param  string $string
      * @throws Exception\ParseException
      */
-    public static function fromString($string): static
+    public static function from_string($string): static
     {
         if (static::$parser === null) {
             static::$parser = new Parser();
         }
-
-        if (! preg_match('(nplurals=(?P<nplurals>\d+))', $string, $match)) {
-            throw new Exception\ParseException(sprintf(
-                'Unknown or invalid parser rule: %s',
-                $string
-            ));
+        if (!preg_match('(nplurals=(?P<nplurals>\d+))', $string, $match)) {
+            throw new Exception\Parse_Exception(sprintf('Unknown or invalid parser rule: %s', $string));
         }
-
-        $numPlurals = (int) $match['nplurals'];
-
-        if (! preg_match('(plural=(?P<plural>[^;\n]+))', $string, $match)) {
-            throw new Exception\ParseException(sprintf(
-                'Unknown or invalid parser rule: %s',
-                $string
-            ));
+        $num_plurals = (int) $match['nplurals'];
+        if (!preg_match('(plural=(?P<plural>[^;\n]+))', $string, $match)) {
+            throw new Exception\Parse_Exception(sprintf('Unknown or invalid parser rule: %s', $string));
         }
-
         $tree = static::$parser->parse($match['plural']);
-        $ast  = static::createAst($tree);
-
-        return new static($numPlurals, $ast);
+        $ast = static::create_ast($tree);
+        return new static($num_plurals, $ast);
     }
-
     /**
      * Create an AST from a tree.
      *
      * Theoretically we could just use the given Symbol, but that one is not
      * so easy to serialize and also takes up more memory.
      */
-    protected static function createAst(Symbol $symbol): array
+    protected static function create_ast(Symbol $symbol): array
     {
         $ast = ['id' => $symbol->id, 'arguments' => []];
-
         switch ($symbol->id) {
             case 'n':
                 break;
-
             case 'number':
                 $ast['arguments'][] = $symbol->value;
                 break;
-
             case '!':
-                $ast['arguments'][] = static::createAst($symbol->first);
+                $ast['arguments'][] = static::create_ast($symbol->first);
                 break;
-
             case '?':
-                $ast['arguments'][] = static::createAst($symbol->first);
-                $ast['arguments'][] = static::createAst($symbol->second);
-                $ast['arguments'][] = static::createAst($symbol->third);
+                $ast['arguments'][] = static::create_ast($symbol->first);
+                $ast['arguments'][] = static::create_ast($symbol->second);
+                $ast['arguments'][] = static::create_ast($symbol->third);
                 break;
-
             default:
-                $ast['arguments'][] = static::createAst($symbol->first);
-                $ast['arguments'][] = static::createAst($symbol->second);
+                $ast['arguments'][] = static::create_ast($symbol->first);
+                $ast['arguments'][] = static::create_ast($symbol->second);
                 break;
         }
-
         return $ast;
     }
 }

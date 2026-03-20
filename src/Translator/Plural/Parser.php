@@ -1,16 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\I18n\Translator\Plural;
 
 use function ctype_digit;
-
 use Laminas\I18n\Exception;
-
 use function max;
 use function sprintf;
-
 /**
  * Plural rule parser.
  *
@@ -27,111 +23,92 @@ class Parser
      * @var string
      */
     protected $string;
-
     /**
      * Current lexer position in the string.
      *
      * @var int
      */
-    protected $currentPos;
-
+    protected $current_pos;
     /**
      * Current token.
      *
      * @var Symbol
      */
-    protected $currentToken;
-
+    protected $current_token;
     /**
      * Table of symbols.
      *
      * @var Symbol[]
      */
-    protected $symbolTable = [];
-
+    protected $symbol_table = [];
     /**
      * Create a new plural parser.
      */
     public function __construct()
     {
-        $this->populateSymbolTable();
+        $this->populate_symbol_table();
     }
-
     /**
      * Populate the symbol table.
      *
      * @return void
      */
-    protected function populateSymbolTable()
+    protected function populate_symbol_table()
     {
         // Ternary operators
-        $this->registerSymbol('?', 20)->setLeftDenotationGetter(
+        $this->register_symbol('?', 20)->set_left_denotation_getter(
             // @codingStandardsIgnoreStart Generic.WhiteSpace.ScopeIndent.IncorrectExact
             static function (Symbol $self, Symbol $left): \Laminas\I18n\Translator\Plural\Symbol {
-                $self->first  = $left;
+                $self->first = $left;
                 $self->second = $self->parser->expression();
                 $self->parser->advance(':');
-                $self->third  = $self->parser->expression();
+                $self->third = $self->parser->expression();
                 return $self;
             }
-            // @codingStandardsIgnoreEnd
         );
-        $this->registerSymbol(':');
-
+        $this->register_symbol(':');
         // Boolean operators
-        $this->registerLeftInfixSymbol('||', 30);
-        $this->registerLeftInfixSymbol('&&', 40);
-
+        $this->register_left_infix_symbol('||', 30);
+        $this->register_left_infix_symbol('&&', 40);
         // Equal operators
-        $this->registerLeftInfixSymbol('==', 50);
-        $this->registerLeftInfixSymbol('!=', 50);
-
+        $this->register_left_infix_symbol('==', 50);
+        $this->register_left_infix_symbol('!=', 50);
         // Compare operators
-        $this->registerLeftInfixSymbol('>', 50);
-        $this->registerLeftInfixSymbol('<', 50);
-        $this->registerLeftInfixSymbol('>=', 50);
-        $this->registerLeftInfixSymbol('<=', 50);
-
+        $this->register_left_infix_symbol('>', 50);
+        $this->register_left_infix_symbol('<', 50);
+        $this->register_left_infix_symbol('>=', 50);
+        $this->register_left_infix_symbol('<=', 50);
         // Add operators
-        $this->registerLeftInfixSymbol('-', 60);
-        $this->registerLeftInfixSymbol('+', 60);
-
+        $this->register_left_infix_symbol('-', 60);
+        $this->register_left_infix_symbol('+', 60);
         // Multiply operators
-        $this->registerLeftInfixSymbol('*', 70);
-        $this->registerLeftInfixSymbol('/', 70);
-        $this->registerLeftInfixSymbol('%', 70);
-
+        $this->register_left_infix_symbol('*', 70);
+        $this->register_left_infix_symbol('/', 70);
+        $this->register_left_infix_symbol('%', 70);
         // Not operator
-        $this->registerPrefixSymbol('!', 80);
-
+        $this->register_prefix_symbol('!', 80);
         // Literals
-        $this->registerSymbol('n')->setNullDenotationGetter(
+        $this->register_symbol('n')->set_null_denotation_getter(
             // @codingStandardsIgnoreStart Generic.WhiteSpace.ScopeIndent.IncorrectExact
-            static fn (Symbol $self): \Laminas\I18n\Translator\Plural\Symbol => $self
-            // @codingStandardsIgnoreEnd
+            static fn(Symbol $self): \Laminas\I18n\Translator\Plural\Symbol => $self
         );
-        $this->registerSymbol('number')->setNullDenotationGetter(
+        $this->register_symbol('number')->set_null_denotation_getter(
             // @codingStandardsIgnoreStart Generic.WhiteSpace.ScopeIndent.IncorrectExact
-            static fn (Symbol $self): \Laminas\I18n\Translator\Plural\Symbol => $self
-            // @codingStandardsIgnoreEnd
+            static fn(Symbol $self): \Laminas\I18n\Translator\Plural\Symbol => $self
         );
-
         // Parentheses
-        $this->registerSymbol('(')->setNullDenotationGetter(
+        $this->register_symbol('(')->set_null_denotation_getter(
             // @codingStandardsIgnoreStart Generic.WhiteSpace.ScopeIndent.IncorrectExact
             static function (Symbol $self) {
                 $expression = $self->parser->expression();
                 $self->parser->advance(')');
                 return $expression;
             }
-            // @codingStandardsIgnoreEnd
         );
-        $this->registerSymbol(')');
-
+        $this->register_symbol(')');
         // Eof
-        $this->registerSymbol('eof');
+        $this->register_symbol('eof');
     }
-
     /**
      * Register a left infix symbol.
      *
@@ -139,19 +116,17 @@ class Parser
      * @param  int $leftBindingPower
      * @return void
      */
-    protected function registerLeftInfixSymbol($id, $leftBindingPower)
+    protected function register_left_infix_symbol($id, $left_binding_power)
     {
-        $this->registerSymbol($id, $leftBindingPower)->setLeftDenotationGetter(
+        $this->register_symbol($id, $left_binding_power)->set_left_denotation_getter(
             // @codingStandardsIgnoreStart Generic.WhiteSpace.ScopeIndent.IncorrectExact
-            static function (Symbol $self, Symbol $left) use ($leftBindingPower): \Laminas\I18n\Translator\Plural\Symbol {
-                $self->first  = $left;
-                $self->second = $self->parser->expression($leftBindingPower);
+            static function (Symbol $self, Symbol $left) use ($left_binding_power): \Laminas\I18n\Translator\Plural\Symbol {
+                $self->first = $left;
+                $self->second = $self->parser->expression($left_binding_power);
                 return $self;
             }
-            // @codingStandardsIgnoreEnd
         );
     }
-
     /**
      * Register a right infix symbol.
      *
@@ -159,19 +134,17 @@ class Parser
      * @param  int $leftBindingPower
      * @return void
      */
-    protected function registerRightInfixSymbol($id, $leftBindingPower)
+    protected function register_right_infix_symbol($id, $left_binding_power)
     {
-        $this->registerSymbol($id, $leftBindingPower)->setLeftDenotationGetter(
+        $this->register_symbol($id, $left_binding_power)->set_left_denotation_getter(
             // @codingStandardsIgnoreStart Generic.WhiteSpace.ScopeIndent.IncorrectExact
-            static function (Symbol $self, Symbol $left) use ($leftBindingPower): \Laminas\I18n\Translator\Plural\Symbol {
-                $self->first  = $left;
-                $self->second = $self->parser->expression($leftBindingPower - 1);
+            static function (Symbol $self, Symbol $left) use ($left_binding_power): \Laminas\I18n\Translator\Plural\Symbol {
+                $self->first = $left;
+                $self->second = $self->parser->expression($left_binding_power - 1);
                 return $self;
             }
-            // @codingStandardsIgnoreEnd
         );
     }
-
     /**
      * Register a prefix symbol.
      *
@@ -179,19 +152,17 @@ class Parser
      * @param  int $leftBindingPower
      * @return void
      */
-    protected function registerPrefixSymbol($id, $leftBindingPower)
+    protected function register_prefix_symbol($id, $left_binding_power)
     {
-        $this->registerSymbol($id, $leftBindingPower)->setNullDenotationGetter(
+        $this->register_symbol($id, $left_binding_power)->set_null_denotation_getter(
             // @codingStandardsIgnoreStart Generic.WhiteSpace.ScopeIndent.IncorrectExact
-            static function (Symbol $self) use ($leftBindingPower): \Laminas\I18n\Translator\Plural\Symbol {
-                $self->first  = $self->parser->expression($leftBindingPower);
+            static function (Symbol $self) use ($left_binding_power): \Laminas\I18n\Translator\Plural\Symbol {
+                $self->first = $self->parser->expression($left_binding_power);
                 $self->second = null;
                 return $self;
             }
-            // @codingStandardsIgnoreEnd
         );
     }
-
     /**
      * Register a symbol.
      *
@@ -199,37 +170,31 @@ class Parser
      * @param  int $leftBindingPower
      * @return Symbol
      */
-    protected function registerSymbol($id, $leftBindingPower = 0)
+    protected function register_symbol($id, $left_binding_power = 0)
     {
-        if (isset($this->symbolTable[$id])) {
-            $symbol                   = $this->symbolTable[$id];
-            $symbol->leftBindingPower = max(
-                $symbol->leftBindingPower,
-                $leftBindingPower
-            );
+        if (isset($this->symbol_table[$id])) {
+            $symbol = $this->symbol_table[$id];
+            $symbol->left_binding_power = max($symbol->left_binding_power, $left_binding_power);
         } else {
-            $symbol                 = new Symbol($this, $id, $leftBindingPower);
-            $this->symbolTable[$id] = $symbol;
+            $symbol = new Symbol($this, $id, $left_binding_power);
+            $this->symbol_table[$id] = $symbol;
         }
-
         return $symbol;
     }
-
     /**
      * Get a new symbol.
      *
      * @param string $id
      * @return Symbol
      */
-    protected function getSymbol($id)
+    protected function get_symbol($id)
     {
-        if (! isset($this->symbolTable[$id])) { // phpcs:ignore
+        if (!isset($this->symbol_table[$id])) {
+            // phpcs:ignore
             // Unknown symbol exception
         }
-
-        return clone $this->symbolTable[$id];
+        return clone $this->symbol_table[$id];
     }
-
     /**
      * Parse a string.
      *
@@ -237,34 +202,29 @@ class Parser
      */
     public function parse(string $string)
     {
-        $this->string       = $string . "\0";
-        $this->currentPos   = 0;
-        $this->currentToken = $this->getNextToken();
-
+        $this->string = $string . "\x00";
+        $this->current_pos = 0;
+        $this->current_token = $this->get_next_token();
         return $this->expression();
     }
-
     /**
      * Parse an expression.
      *
      * @param  int $rightBindingPower
      * @return Symbol
      */
-    public function expression($rightBindingPower = 0)
+    public function expression($right_binding_power = 0)
     {
-        $token              = $this->currentToken;
-        $this->currentToken = $this->getNextToken();
-        $left               = $token->getNullDenotation();
-
-        while ($rightBindingPower < $this->currentToken->leftBindingPower) {
-            $token              = $this->currentToken;
-            $this->currentToken = $this->getNextToken();
-            $left               = $token->getLeftDenotation($left);
+        $token = $this->current_token;
+        $this->current_token = $this->get_next_token();
+        $left = $token->get_null_denotation();
+        while ($right_binding_power < $this->current_token->left_binding_power) {
+            $token = $this->current_token;
+            $this->current_token = $this->get_next_token();
+            $left = $token->get_left_denotation($left);
         }
-
         return $left;
     }
-
     /**
      * Advance the current token and optionally check the old token id.
      *
@@ -273,30 +233,24 @@ class Parser
      */
     public function advance($id = null): void
     {
-        if ($id !== null && $this->currentToken->id !== $id) {
-            throw new Exception\ParseException(
-                sprintf('Expected token with id %s but received %s', $id, $this->currentToken->id)
-            );
+        if ($id !== null && $this->current_token->id !== $id) {
+            throw new Exception\Parse_Exception(sprintf('Expected token with id %s but received %s', $id, $this->current_token->id));
         }
-
-        $this->currentToken = $this->getNextToken();
+        $this->current_token = $this->get_next_token();
     }
-
     /**
      * Get the next token.
      *
      * @return Symbol
      * @throws Exception\ParseException
      */
-    protected function getNextToken()
+    protected function get_next_token()
     {
-        while ($this->string[$this->currentPos] === ' ' || $this->string[$this->currentPos] === "\t") {
-            $this->currentPos++;
+        while ($this->string[$this->current_pos] === ' ' || $this->string[$this->current_pos] === "\t") {
+            $this->current_pos++;
         }
-
-        $result = $this->string[$this->currentPos++];
-        $value  = null;
-
+        $result = $this->string[$this->current_pos++];
+        $value = null;
         switch ($result) {
             case '0':
             case '1':
@@ -308,36 +262,32 @@ class Parser
             case '7':
             case '8':
             case '9':
-                while (ctype_digit($this->string[$this->currentPos])) {
-                    $result .= $this->string[$this->currentPos++];
+                while (ctype_digit($this->string[$this->current_pos])) {
+                    $result .= $this->string[$this->current_pos++];
                 }
-
-                $id    = 'number';
+                $id = 'number';
                 $value = (int) $result;
                 break;
-
             case '=':
             case '&':
             case '|':
-                if ($this->string[$this->currentPos] === $result) {
-                    $this->currentPos++;
+                if ($this->string[$this->current_pos] === $result) {
+                    $this->current_pos++;
                     $id = $result . $result;
-                } else { // phpcs:ignore
+                } else {
+                    // phpcs:ignore
                     // Yield error
                 }
                 break;
-
             case '!':
             case '<':
             case '>':
-                if ($this->string[$this->currentPos] === '=') {
-                    $this->currentPos++;
+                if ($this->string[$this->current_pos] === '=') {
+                    $this->current_pos++;
                     $result .= '=';
                 }
-
                 $id = $result;
                 break;
-
             case '*':
             case '/':
             case '%':
@@ -350,24 +300,17 @@ class Parser
             case ')':
                 $id = $result;
                 break;
-
             case ';':
             case "\n":
-            case "\0":
+            case "\x00":
                 $id = 'eof';
-                $this->currentPos--;
+                $this->current_pos--;
                 break;
-
             default:
-                throw new Exception\ParseException(sprintf(
-                    'Found invalid character "%s" in input stream',
-                    $result
-                ));
+                throw new Exception\Parse_Exception(sprintf('Found invalid character "%s" in input stream', $result));
         }
-
-        $token        = $this->getSymbol($id);
+        $token = $this->get_symbol($id);
         $token->value = $value;
-
         return $token;
     }
 }

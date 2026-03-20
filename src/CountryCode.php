@@ -1,39 +1,31 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\I18n;
 
 use function assert;
-
 use Laminas\I18n\Exception\InvalidArgumentException;
-
 use Locale;
-
 use function preg_match;
 use function strtoupper;
-
 /**
  * @psalm-immutable
  */
-final readonly class CountryCode
+final readonly class Country_Code
 {
     /** @param non-empty-string $code */
     private function __construct(private string $code)
     {
     }
-
     /** @return non-empty-string */
-    public function toString(): string
+    public function to_string(): string
     {
         return $this->code;
     }
-
     public function equals(self $other): bool
     {
         return $this->code === $other->code;
     }
-
     /**
      * Create a new ValueObject from an ISO 3166 Country Code
      * Country codes are 2 letter, uppercase strings representing a country identifier on planet earth. The given
@@ -46,21 +38,18 @@ final readonly class CountryCode
      * @throws InvalidArgumentException An invalid string or an unknown country will cause an exception.
      * @psalm-pure
      */
-    public static function fromString(string $code): self
+    public static function from_string(string $code): self
     {
         $code = strtoupper($code);
-        if (! preg_match('/^[A-Z]{2}$/', $code)) {
-            throw InvalidArgumentException::withInvalidCountryCode($code);
+        if (!preg_match('/^[A-Z]{2}$/', $code)) {
+            throw InvalidArgumentException::with_invalid_country_code($code);
         }
-
-        $displayName = Locale::getDisplayRegion('-' . $code, 'GB');
-        if ($displayName === '' || $displayName === 'Unknown Region') {
-            throw InvalidArgumentException::withUnknownCountryCode($code);
+        $display_name = Locale::get_display_region('-' . $code, 'GB');
+        if ($display_name === '' || $display_name === 'Unknown Region') {
+            throw InvalidArgumentException::with_unknown_country_code($code);
         }
-
         return new self($code);
     }
-
     /**
      * Create a new value object from a locale string
      *
@@ -71,16 +60,14 @@ final readonly class CountryCode
      * @throws InvalidArgumentException An unrecognizable locale will cause an exception.
      * @psalm-pure
      */
-    public static function fromLocaleString(string $locale): self
+    public static function from_locale_string(string $locale): self
     {
-        $region = Locale::getRegion($locale);
+        $region = Locale::get_region($locale);
         if ($region === null || $region === '') {
-            throw InvalidArgumentException::withUnrecognizableLocaleString($locale);
+            throw InvalidArgumentException::with_unrecognizable_locale_string($locale);
         }
-
-        return self::fromString($region);
+        return self::from_string($region);
     }
-
     /**
      * Return a country code from either a string code or a locale string falling back to the system locale if null
      *
@@ -90,26 +77,21 @@ final readonly class CountryCode
      * @throws InvalidArgumentException When a non-empty string is provided that cannot be recognized,
      *                                  an exception will be thrown.
      */
-    public static function detect(string|self|null $countryCodeOrLocale = null): self
+    public static function detect(string|self|null $country_code_or_locale = null): self
     {
-        if ($countryCodeOrLocale instanceof self) {
-            return $countryCodeOrLocale;
+        if ($country_code_or_locale instanceof self) {
+            return $country_code_or_locale;
         }
-
-        if ($countryCodeOrLocale === null || $countryCodeOrLocale === '') {
-            $countryCodeOrLocale = Locale::getDefault();
+        if ($country_code_or_locale === null || $country_code_or_locale === '') {
+            $country_code_or_locale = Locale::get_default();
         }
-
-        assert($countryCodeOrLocale !== '');
-
-        $code = self::tryFromString($countryCodeOrLocale);
+        assert($country_code_or_locale !== '');
+        $code = self::try_from_string($country_code_or_locale);
         if ($code) {
             return $code;
         }
-
-        throw InvalidArgumentException::withUndetectableCountryCode($countryCodeOrLocale);
+        throw InvalidArgumentException::with_undetectable_country_code($country_code_or_locale);
     }
-
     /**
      * Attempt to create a value object from either a country code or a locale string
      *
@@ -121,18 +103,16 @@ final readonly class CountryCode
      * @param non-empty-string $countryCodeOrLocale
      * @psalm-pure
      */
-    public static function tryFromString(string $countryCodeOrLocale): ?self
+    public static function try_from_string(string $country_code_or_locale): ?self
     {
         try {
-            return self::fromLocaleString($countryCodeOrLocale);
+            return self::from_locale_string($country_code_or_locale);
         } catch (InvalidArgumentException) {
         }
-
         try {
-            return self::fromString($countryCodeOrLocale);
+            return self::from_string($country_code_or_locale);
         } catch (InvalidArgumentException) {
         }
-
         return null;
     }
 }

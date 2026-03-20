@@ -1,21 +1,16 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\I18n\Translator;
 
 use function get_debug_type;
-
 use Laminas\I18n\Exception;
-use Laminas\I18n\Translator\Loader\FileLoaderInterface;
-use Laminas\I18n\Translator\Loader\RemoteLoaderInterface;
-use Laminas\ServiceManager\AbstractPluginManager;
-use Laminas\ServiceManager\Exception\InvalidServiceException;
-
-use Laminas\ServiceManager\Factory\InvokableFactory;
-
+use Laminas\I18n\Translator\Loader\File_Loader_Interface;
+use Laminas\I18n\Translator\Loader\Remote_Loader_Interface;
+use Laminas\Service_Manager\Abstract_Plugin_Manager;
+use Laminas\Service_Manager\Exception\Invalid_Service_Exception;
+use Laminas\Service_Manager\Factory\Invokable_Factory;
 use function sprintf;
-
 /**
  * Plugin manager implementation for translation loaders.
  *
@@ -60,42 +55,38 @@ use function sprintf;
  * @extends AbstractPluginManager<InstanceType>
  * @final
  */
-class LoaderPluginManager extends AbstractPluginManager
+class Loader_Plugin_Manager extends Abstract_Plugin_Manager
 {
     /** @inheritDoc */
     protected $aliases = [
-        'gettext'  => Loader\Gettext::class,
-        'getText'  => Loader\Gettext::class,
-        'GetText'  => Loader\Gettext::class,
-        'ini'      => Loader\Ini::class,
-        'phparray' => Loader\PhpArray::class,
-        'phpArray' => Loader\PhpArray::class,
-        'PhpArray' => Loader\PhpArray::class,
-
+        'gettext' => Loader\Gettext::class,
+        'getText' => Loader\Gettext::class,
+        'GetText' => Loader\Gettext::class,
+        'ini' => Loader\Ini::class,
+        'phparray' => Loader\Php_Array::class,
+        'phpArray' => Loader\Php_Array::class,
+        'PhpArray' => Loader\Php_Array::class,
         // Legacy Zend Framework aliases
-        'Zend\I18n\Translator\Loader\Gettext'  => Loader\Gettext::class,
-        'Zend\I18n\Translator\Loader\Ini'      => Loader\Ini::class,
-        'Zend\I18n\Translator\Loader\PhpArray' => Loader\PhpArray::class,
-
+        'Zend\I18n\Translator\Loader\Gettext' => Loader\Gettext::class,
+        'Zend\I18n\Translator\Loader\Ini' => Loader\Ini::class,
+        'Zend\I18n\Translator\Loader\PhpArray' => Loader\Php_Array::class,
         // v2 normalized FQCNs
-        'zendi18ntranslatorloadergettext'  => Loader\Gettext::class,
-        'zendi18ntranslatorloaderini'      => Loader\Ini::class,
-        'zendi18ntranslatorloaderphparray' => Loader\PhpArray::class,
+        'zendi18ntranslatorloadergettext' => Loader\Gettext::class,
+        'zendi18ntranslatorloaderini' => Loader\Ini::class,
+        'zendi18ntranslatorloaderphparray' => Loader\Php_Array::class,
     ];
-
     /** @inheritDoc */
     protected $factories = [
-        Loader\Gettext::class  => InvokableFactory::class,
-        Loader\Ini::class      => InvokableFactory::class,
-        Loader\PhpArray::class => InvokableFactory::class,
+        Loader\Gettext::class => Invokable_Factory::class,
+        Loader\Ini::class => Invokable_Factory::class,
+        Loader\Php_Array::class => Invokable_Factory::class,
         // Legacy (v2) due to alias resolution; canonical form of resolved
         // alias is used to look up the factory, while the non-normalized
         // resolved alias is used as the requested name passed to the factory.
-        'laminasi18ntranslatorloadergettext'  => InvokableFactory::class,
-        'laminasi18ntranslatorloaderini'      => InvokableFactory::class,
-        'laminasi18ntranslatorloaderphparray' => InvokableFactory::class,
+        'laminasi18ntranslatorloadergettext' => Invokable_Factory::class,
+        'laminasi18ntranslatorloaderini' => Invokable_Factory::class,
+        'laminasi18ntranslatorloaderphparray' => Invokable_Factory::class,
     ];
-
     /**
      * Validate the plugin.
      *
@@ -108,19 +99,12 @@ class LoaderPluginManager extends AbstractPluginManager
      */
     public function validate($plugin): void
     {
-        if ($plugin instanceof FileLoaderInterface || $plugin instanceof RemoteLoaderInterface) {
+        if ($plugin instanceof File_Loader_Interface || $plugin instanceof Remote_Loader_Interface) {
             // we're okay
             return;
         }
-
-        throw new InvalidServiceException(sprintf(
-            'Plugin of type %s is invalid; must implement %s or %s',
-            get_debug_type($plugin),
-            FileLoaderInterface::class,
-            RemoteLoaderInterface::class
-        ));
+        throw new Invalid_Service_Exception(sprintf('Plugin of type %s is invalid; must implement %s or %s', get_debug_type($plugin), File_Loader_Interface::class, Remote_Loader_Interface::class));
     }
-
     /**
      * Validate the plugin is of the expected type (v2).
      *
@@ -133,17 +117,12 @@ class LoaderPluginManager extends AbstractPluginManager
      * @throws Exception\RuntimeException
      * @psalm-assert InstanceType $plugin
      */
-    public function validatePlugin($plugin): void
+    public function validate_plugin($plugin): void
     {
         try {
             $this->validate($plugin);
-        } catch (InvalidServiceException) {
-            throw new Exception\RuntimeException(sprintf(
-                'Plugin of type %s is invalid; must implement %s or %s',
-                get_debug_type($plugin),
-                FileLoaderInterface::class,
-                RemoteLoaderInterface::class
-            ));
+        } catch (Invalid_Service_Exception) {
+            throw new Exception\RuntimeException(sprintf('Plugin of type %s is invalid; must implement %s or %s', get_debug_type($plugin), File_Loader_Interface::class, Remote_Loader_Interface::class));
         }
     }
 }

@@ -1,65 +1,50 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\I18n\Validator;
 
 use function assert;
 use function intl_is_failure;
-
-use IntlException;
-
+use Intl_Exception;
 use function is_bool;
 use function is_float;
 use function is_int;
 use function is_scalar;
 use function is_string;
-
-use Laminas\Stdlib\ArrayUtils;
-
-use Laminas\Stdlib\StringUtils;
-use Laminas\Stdlib\StringWrapper\StringWrapperInterface;
-use Laminas\Validator\AbstractValidator;
+use Laminas\Stdlib\Array_Utils;
+use Laminas\Stdlib\String_Utils;
+use Laminas\Stdlib\String_Wrapper\String_Wrapper_Interface;
+use Laminas\Validator\Abstract_Validator;
 use Laminas\Validator\Exception;
 use Locale;
-use NumberFormatter;
-
+use Number_Formatter;
 use function preg_match;
 use function preg_quote;
 use function str_replace;
-
 use Traversable;
-
 /** @final */
-class IsFloat extends AbstractValidator
+class Is_Float extends Abstract_Validator
 {
-    public const INVALID   = 'floatInvalid';
+    public const INVALID = 'floatInvalid';
     public const NOT_FLOAT = 'notFloat';
-
     /**
      * Validation failure message template definitions
      *
      * @var array<string, string>
      */
-    protected $messageTemplates = [
-        self::INVALID   => 'Invalid type given. String, integer or float expected',
-        self::NOT_FLOAT => 'The input does not appear to be a float',
-    ];
-
+    protected $message_templates = [self::INVALID => 'Invalid type given. String, integer or float expected', self::NOT_FLOAT => 'The input does not appear to be a float'];
     /**
      * Optional locale
      *
      * @var string|null
      */
     protected $locale;
-
     /**
      * UTF-8 compatible wrapper for string functions
      *
      * @var StringWrapperInterface
      */
     protected $wrapper;
-
     /**
      * Constructor for the integer validator
      *
@@ -67,19 +52,15 @@ class IsFloat extends AbstractValidator
      */
     public function __construct($options = [])
     {
-        $this->wrapper = StringUtils::getWrapper();
-
+        $this->wrapper = String_Utils::get_wrapper();
         if ($options instanceof Traversable) {
-            $options = ArrayUtils::iteratorToArray($options);
+            $options = Array_Utils::iterator_to_array($options);
         }
-
         if (isset($options['locale'])) {
-            $this->setLocale($options['locale']);
+            $this->set_locale($options['locale']);
         }
-
         parent::__construct($options);
     }
-
     /**
      * Returns the set locale
      *
@@ -87,14 +68,13 @@ class IsFloat extends AbstractValidator
      *
      * @return string
      */
-    public function getLocale()
+    public function get_locale()
     {
         if (null === $this->locale) {
-            $this->locale = Locale::getDefault();
+            $this->locale = Locale::get_default();
         }
         return $this->locale;
     }
-
     /**
      * Sets the locale to use
      *
@@ -103,12 +83,11 @@ class IsFloat extends AbstractValidator
      * @param string|null $locale
      * @return $this
      */
-    public function setLocale($locale)
+    public function set_locale($locale)
     {
         $this->locale = $locale;
         return $this;
     }
-
     /**
      * Returns true if and only if $value is a floating-point value. Uses the formal definition of a float as described
      * in the PHP manual: {@link https://www.php.net/float}
@@ -117,116 +96,77 @@ class IsFloat extends AbstractValidator
      * @return bool
      * @throws Exception\InvalidArgumentException
      */
-    public function isValid($value)
+    public function is_valid($value)
     {
-        if (! is_scalar($value) || is_bool($value)) {
+        if (!is_scalar($value) || is_bool($value)) {
             $this->error(self::INVALID);
             return false;
         }
-
-        $this->setValue($value);
-
+        $this->set_value($value);
         if (is_float($value) || is_int($value)) {
             return true;
         }
-
         if ($value === '') {
             $this->error(self::NOT_FLOAT);
-
             return false;
         }
-
         // Need to check if this is scientific formatted string. If not, switch to decimal.
-        $formatter = new NumberFormatter($this->getLocale(), NumberFormatter::SCIENTIFIC);
-
+        $formatter = new Number_Formatter($this->get_locale(), Number_Formatter::SCIENTIFIC);
         try {
-            if (intl_is_failure($formatter->getErrorCode())) {
-                throw new Exception\InvalidArgumentException($formatter->getErrorMessage());
+            if (intl_is_failure($formatter->get_error_code())) {
+                throw new Exception\InvalidArgumentException($formatter->get_error_message());
             }
-        } catch (IntlException $intlException) {
-            throw new Exception\InvalidArgumentException($intlException->getMessage(), 0, $intlException);
+        } catch (Intl_Exception $intl_exception) {
+            throw new Exception\InvalidArgumentException($intl_exception->get_message(), 0, $intl_exception);
         }
-
-        if (StringUtils::hasPcreUnicodeSupport()) {
-            $exponentialSymbols = '[Ee' . $formatter->getSymbol(NumberFormatter::EXPONENTIAL_SYMBOL) . ']+';
-            $search             = '/' . $exponentialSymbols . '/u';
+        if (String_Utils::has_pcre_unicode_support()) {
+            $exponential_symbols = '[Ee' . $formatter->get_symbol(Number_Formatter::EXPONENTIAL_SYMBOL) . ']+';
+            $search = '/' . $exponential_symbols . '/u';
         } else {
-            $exponentialSymbols = '[Ee]';
-            $search             = '/' . $exponentialSymbols . '/';
+            $exponential_symbols = '[Ee]';
+            $search = '/' . $exponential_symbols . '/';
         }
-
-        if (! preg_match($search, $value)) {
-            $formatter = new NumberFormatter($this->getLocale(), NumberFormatter::DECIMAL);
+        if (!preg_match($search, $value)) {
+            $formatter = new Number_Formatter($this->get_locale(), Number_Formatter::DECIMAL);
         }
-
         /**
          * @desc There are separator "look-alikes" for decimal and group separators that are more commonly used than the
          *       official unicode character. We need to replace those with the real thing - or remove it.
          */
-        $groupSeparator = $formatter->getSymbol(NumberFormatter::GROUPING_SEPARATOR_SYMBOL);
-        $decSeparator   = $formatter->getSymbol(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL);
-
+        $group_separator = $formatter->get_symbol(Number_Formatter::GROUPING_SEPARATOR_SYMBOL);
+        $dec_separator = $formatter->get_symbol(Number_Formatter::DECIMAL_SEPARATOR_SYMBOL);
         //NO-BREAK SPACE and ARABIC THOUSANDS SEPARATOR
-        if ($groupSeparator === "\xC2\xA0") {
-            $value = str_replace(' ', $groupSeparator, $value);
-        } elseif ($groupSeparator === "\xD9\xAC") {
+        if ($group_separator === " ") {
+            $value = str_replace(' ', $group_separator, $value);
+        } elseif ($group_separator === "٬") {
             //NumberFormatter doesn't have grouping at all for Arabic-Indic
-            $value = str_replace(['\'', $groupSeparator], '', $value);
+            $value = str_replace(['\'', $group_separator], '', $value);
         }
-
         //ARABIC DECIMAL SEPARATOR
-        if ($decSeparator === "\xD9\xAB") {
-            $value = str_replace(',', $decSeparator, $value);
+        if ($dec_separator === "٫") {
+            $value = str_replace(',', $dec_separator, $value);
         }
-
-        $groupSeparatorPosition = $this->wrapper->strpos($value, $groupSeparator);
-        $decSeparatorPosition   = $this->wrapper->strpos($value, $decSeparator);
-
+        $group_separator_position = $this->wrapper->strpos($value, $group_separator);
+        $dec_separator_position = $this->wrapper->strpos($value, $dec_separator);
         //We have separators, and they are flipped. i.e. 2.000,000 for en-US
-        if (
-            $groupSeparatorPosition !== false
-            && $decSeparatorPosition !== false
-            && $groupSeparatorPosition > $decSeparatorPosition
-        ) {
+        if ($group_separator_position !== false && $dec_separator_position !== false && $group_separator_position > $dec_separator_position) {
             $this->error(self::NOT_FLOAT);
-
             return false;
         }
-
         //If we have Unicode support, we can use the real graphemes, otherwise, just the ASCII characters
-        $decimal     = '[' . preg_quote($decSeparator, '/') . ']';
-        $prefix      = '[+-]';
-        $exp         = $exponentialSymbols;
-        $numberRange = '0-9';
-        $useUnicode  = '';
-        $suffix      = '';
-
-        if (StringUtils::hasPcreUnicodeSupport()) {
-            $prefix      = '['
-                . preg_quote(
-                    $formatter->getTextAttribute(NumberFormatter::POSITIVE_PREFIX)
-                    . $formatter->getTextAttribute(NumberFormatter::NEGATIVE_PREFIX)
-                    . $formatter->getSymbol(NumberFormatter::PLUS_SIGN_SYMBOL)
-                    . $formatter->getSymbol(NumberFormatter::MINUS_SIGN_SYMBOL),
-                    '/'
-                )
-                . ']{0,3}';
-            $suffix      = $formatter->getTextAttribute(NumberFormatter::NEGATIVE_SUFFIX);
-            $suffix      = $suffix !== false
-                ? '['
-                    . preg_quote(
-                        $formatter->getTextAttribute(NumberFormatter::POSITIVE_SUFFIX)
-                        . $formatter->getTextAttribute(NumberFormatter::NEGATIVE_SUFFIX)
-                        . $formatter->getSymbol(NumberFormatter::PLUS_SIGN_SYMBOL)
-                        . $formatter->getSymbol(NumberFormatter::MINUS_SIGN_SYMBOL),
-                        '/'
-                    )
-                    . ']{0,3}'
-                : '';
-            $numberRange = '\p{N}';
-            $useUnicode  = 'u';
+        $decimal = '[' . preg_quote($dec_separator, '/') . ']';
+        $prefix = '[+-]';
+        $exp = $exponential_symbols;
+        $number_range = '0-9';
+        $use_unicode = '';
+        $suffix = '';
+        if (String_Utils::has_pcre_unicode_support()) {
+            $prefix = '[' . preg_quote($formatter->get_text_attribute(Number_Formatter::POSITIVE_PREFIX) . $formatter->get_text_attribute(Number_Formatter::NEGATIVE_PREFIX) . $formatter->get_symbol(Number_Formatter::PLUS_SIGN_SYMBOL) . $formatter->get_symbol(Number_Formatter::MINUS_SIGN_SYMBOL), '/') . ']{0,3}';
+            $suffix = $formatter->get_text_attribute(Number_Formatter::NEGATIVE_SUFFIX);
+            $suffix = $suffix !== false ? '[' . preg_quote($formatter->get_text_attribute(Number_Formatter::POSITIVE_SUFFIX) . $formatter->get_text_attribute(Number_Formatter::NEGATIVE_SUFFIX) . $formatter->get_symbol(Number_Formatter::PLUS_SIGN_SYMBOL) . $formatter->get_symbol(Number_Formatter::MINUS_SIGN_SYMBOL), '/') . ']{0,3}' : '';
+            $number_range = '\p{N}';
+            $use_unicode = 'u';
         }
-
         /**
          * @see https://www.php.net/float
          *
@@ -238,47 +178,31 @@ class IsFloat extends AbstractValidator
          *       that a grouping sperator is not in the last GROUPING_SIZE graphemes
          *       of the string - i.e. 10,6 is not valid for en-US.
          */
-
-        $lnum    = '[' . $numberRange . ']+';
-        $dnum    = '(([' . $numberRange . ']*' . $decimal . $lnum . ')|('
-            . $lnum . $decimal . '[' . $numberRange . ']*))';
-        $expDnum = '((' . $prefix . '((' . $lnum . '|' . $dnum . ')' . $exp . $prefix . $lnum . ')' . $suffix . ')|'
-            . '(' . $suffix . '(' . $lnum . $prefix . $exp . '(' . $dnum . '|' . $lnum . '))' . $prefix . '))';
-
+        $lnum = '[' . $number_range . ']+';
+        $dnum = '(([' . $number_range . ']*' . $decimal . $lnum . ')|(' . $lnum . $decimal . '[' . $number_range . ']*))';
+        $exp_dnum = '((' . $prefix . '((' . $lnum . '|' . $dnum . ')' . $exp . $prefix . $lnum . ')' . $suffix . ')|' . '(' . $suffix . '(' . $lnum . $prefix . $exp . '(' . $dnum . '|' . $lnum . '))' . $prefix . '))';
         // LEFT-TO-RIGHT MARK (U+200E) is messing up everything for the handful
         // of locales that have it
-        $lnumSearch     = str_replace("\xE2\x80\x8E", '', '/^' . $prefix . $lnum . $suffix . '$/' . $useUnicode);
-        $dnumSearch     = str_replace("\xE2\x80\x8E", '', '/^' . $prefix . $dnum . $suffix . '$/' . $useUnicode);
-        $expDnumSearch  = str_replace("\xE2\x80\x8E", '', '/^' . $expDnum . '$/' . $useUnicode);
-        $value          = str_replace("\xE2\x80\x8E", '', $value);
-        $unGroupedValue = str_replace($groupSeparator, '', $value);
-
+        $lnum_search = str_replace("‎", '', '/^' . $prefix . $lnum . $suffix . '$/' . $use_unicode);
+        $dnum_search = str_replace("‎", '', '/^' . $prefix . $dnum . $suffix . '$/' . $use_unicode);
+        $exp_dnum_search = str_replace("‎", '', '/^' . $exp_dnum . '$/' . $use_unicode);
+        $value = str_replace("‎", '', $value);
+        $un_grouped_value = str_replace($group_separator, '', $value);
         // No strrpos() in wrappers yet. ICU 4.x doesn't have grouping size for
         // everything. ICU 52 has 3 for ALL locales.
-        $groupSize = $formatter->getAttribute(NumberFormatter::GROUPING_SIZE);
-        $groupSize = $groupSize === false ? 3 : $groupSize;
-        assert(is_int($groupSize));
-        $lastStringGroup = $this->wrapper->strlen($value) > $groupSize ?
-            $this->wrapper->substr($value, -$groupSize) :
-            $value;
-
-        assert(is_string($lastStringGroup));
-        assert($lastStringGroup !== '');
-        assert($lnumSearch !== '');
-        assert($dnumSearch !== '');
-        assert($expDnumSearch !== '');
-
-        if (
-            (preg_match($lnumSearch, $unGroupedValue)
-            || preg_match($dnumSearch, $unGroupedValue)
-            || preg_match($expDnumSearch, $unGroupedValue))
-            && false === $this->wrapper->strpos($lastStringGroup, $groupSeparator)
-        ) {
+        $group_size = $formatter->get_attribute(Number_Formatter::GROUPING_SIZE);
+        $group_size = $group_size === false ? 3 : $group_size;
+        assert(is_int($group_size));
+        $last_string_group = $this->wrapper->strlen($value) > $group_size ? $this->wrapper->substr($value, -$group_size) : $value;
+        assert(is_string($last_string_group));
+        assert($last_string_group !== '');
+        assert($lnum_search !== '');
+        assert($dnum_search !== '');
+        assert($exp_dnum_search !== '');
+        if ((preg_match($lnum_search, $un_grouped_value) || preg_match($dnum_search, $un_grouped_value) || preg_match($exp_dnum_search, $un_grouped_value)) && false === $this->wrapper->strpos($last_string_group, $group_separator)) {
             return true;
         }
-
         $this->error(self::NOT_FLOAT);
-
         return false;
     }
 }

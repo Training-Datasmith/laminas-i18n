@@ -1,54 +1,40 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\I18n\Validator;
 
 use function array_key_exists;
 use function intl_is_failure;
-
-use IntlException;
-
+use Intl_Exception;
 use function is_bool;
 use function is_float;
 use function is_int;
 use function is_string;
-
-use Laminas\Stdlib\ArrayUtils;
-use Laminas\Validator\AbstractValidator;
+use Laminas\Stdlib\Array_Utils;
+use Laminas\Validator\Abstract_Validator;
 use Laminas\Validator\Exception;
 use Locale;
-use NumberFormatter;
-
+use Number_Formatter;
 use function strtr;
-
 use Traversable;
-
 /** @final */
-class IsInt extends AbstractValidator
+class Is_Int extends Abstract_Validator
 {
-    public const INVALID        = 'intInvalid';
-    public const NOT_INT        = 'notInt';
+    public const INVALID = 'intInvalid';
+    public const NOT_INT = 'notInt';
     public const NOT_INT_STRICT = 'notIntStrict';
-
     /**
      * Validation failure message template definitions
      *
      * @var array<string, string>
      */
-    protected $messageTemplates = [
-        self::INVALID        => 'Invalid type given. String or integer expected',
-        self::NOT_INT        => 'The input does not appear to be an integer',
-        self::NOT_INT_STRICT => 'The input is not strictly an integer',
-    ];
-
+    protected $message_templates = [self::INVALID => 'Invalid type given. String or integer expected', self::NOT_INT => 'The input does not appear to be an integer', self::NOT_INT_STRICT => 'The input is not strictly an integer'];
     /**
      * Optional locale
      *
      * @var string|null
      */
     protected $locale;
-
     /**
      * Data type is not enforced by default, so the string '123' is considered an integer.
      * Setting strict to true will enforce the integer data type.
@@ -56,7 +42,6 @@ class IsInt extends AbstractValidator
      * @var bool
      */
     protected $strict = false;
-
     /**
      * Constructor for the integer validator
      *
@@ -65,20 +50,16 @@ class IsInt extends AbstractValidator
     public function __construct($options = [])
     {
         if ($options instanceof Traversable) {
-            $options = ArrayUtils::iteratorToArray($options);
+            $options = Array_Utils::iterator_to_array($options);
         }
-
         if (isset($options['locale'])) {
-            $this->setLocale($options['locale']);
+            $this->set_locale($options['locale']);
         }
-
         if (array_key_exists('strict', $options)) {
-            $this->setStrict($options['strict']);
+            $this->set_strict($options['strict']);
         }
-
         parent::__construct($options);
     }
-
     /**
      * Returns the set locale
      *
@@ -86,14 +67,13 @@ class IsInt extends AbstractValidator
      *
      * @return string|null
      */
-    public function getLocale()
+    public function get_locale()
     {
         if (null === $this->locale) {
-            $this->locale = Locale::getDefault();
+            $this->locale = Locale::get_default();
         }
         return $this->locale;
     }
-
     /**
      * Sets the locale to use
      *
@@ -102,12 +82,11 @@ class IsInt extends AbstractValidator
      * @param string|null $locale
      * @return $this
      */
-    public function setLocale($locale)
+    public function set_locale($locale)
     {
         $this->locale = $locale;
         return $this;
     }
-
     /**
      * Returns the strict option
      *
@@ -115,11 +94,10 @@ class IsInt extends AbstractValidator
      *
      * @return bool
      */
-    public function getStrict()
+    public function get_strict()
     {
         return $this->strict;
     }
-
     /**
      * Sets the strict option mode
      *
@@ -129,16 +107,14 @@ class IsInt extends AbstractValidator
      * @return $this
      * @throws Exception\InvalidArgumentException
      */
-    public function setStrict($strict)
+    public function set_strict($strict)
     {
-        if (! is_bool($strict)) {
+        if (!is_bool($strict)) {
             throw new Exception\InvalidArgumentException('Strict option must be a boolean');
         }
-
         $this->strict = $strict;
         return $this;
     }
-
     /**
      * Returns true if and only if $value is a valid integer
      *
@@ -146,58 +122,46 @@ class IsInt extends AbstractValidator
      * @return bool
      * @throws Exception\InvalidArgumentException
      */
-    public function isValid($value)
+    public function is_valid($value)
     {
-        if (! is_string($value) && ! is_int($value) && ! is_float($value)) {
+        if (!is_string($value) && !is_int($value) && !is_float($value)) {
             $this->error(self::INVALID);
             return false;
         }
-
         if (is_int($value)) {
             return true;
         }
-
         if ($this->strict) {
             $this->error(self::NOT_INT_STRICT);
             return false;
         }
-
-        $this->setValue($value);
-
-        $locale = $this->getLocale();
+        $this->set_value($value);
+        $locale = $this->get_locale();
         try {
-            $format = new NumberFormatter($locale, NumberFormatter::DECIMAL);
-            if (intl_is_failure($format->getErrorCode())) {
+            $format = new Number_Formatter($locale, Number_Formatter::DECIMAL);
+            if (intl_is_failure($format->get_error_code())) {
                 throw new Exception\InvalidArgumentException('Invalid locale string given');
             }
-        } catch (IntlException $intlException) {
-            throw new Exception\InvalidArgumentException('Invalid locale string given', 0, $intlException);
+        } catch (Intl_Exception $intl_exception) {
+            throw new Exception\InvalidArgumentException('Invalid locale string given', 0, $intl_exception);
         }
-
         try {
-            $parsedInt = $format->parse((string) $value, NumberFormatter::TYPE_INT64);
-            if (intl_is_failure($format->getErrorCode())) {
+            $parsed_int = $format->parse((string) $value, Number_Formatter::TYPE_INT64);
+            if (intl_is_failure($format->get_error_code())) {
                 $this->error(self::NOT_INT);
                 return false;
             }
-        } catch (IntlException) {
+        } catch (Intl_Exception) {
             $this->error(self::NOT_INT);
             return false;
         }
-
-        $decimalSep  = $format->getSymbol(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL);
-        $groupingSep = $format->getSymbol(NumberFormatter::GROUPING_SEPARATOR_SYMBOL);
-
-        $valueFiltered = strtr((string) $value, [
-            $groupingSep => '',
-            $decimalSep  => '.',
-        ]);
-
-        if ((string) $parsedInt !== $valueFiltered) {
+        $decimal_sep = $format->get_symbol(Number_Formatter::DECIMAL_SEPARATOR_SYMBOL);
+        $grouping_sep = $format->get_symbol(Number_Formatter::GROUPING_SEPARATOR_SYMBOL);
+        $value_filtered = strtr((string) $value, [$grouping_sep => '', $decimal_sep => '.']);
+        if ((string) $parsed_int !== $value_filtered) {
             $this->error(self::NOT_INT);
             return false;
         }
-
         return true;
     }
 }

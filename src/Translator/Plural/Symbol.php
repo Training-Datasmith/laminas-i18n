@@ -1,14 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\I18n\Translator\Plural;
 
 use Closure;
 use Laminas\I18n\Exception;
-
 use function sprintf;
-
 /**
  * Parser symbol.
  *
@@ -27,49 +24,42 @@ class Symbol
      * @var Parser
      */
     public $parser;
-
     /**
      * Getter for null denotation.
      *
      * @var callable
      */
-    protected $nullDenotationGetter;
-
+    protected $null_denotation_getter;
     /**
      * Getter for left denotation.
      *
      * @var callable
      */
-    protected $leftDenotationGetter;
-
+    protected $left_denotation_getter;
     /**
      * Value used by literals.
      *
      * @var mixed
      */
     public $value;
-
     /**
      * First node value.
      *
      * @var Symbol
      */
     public $first;
-
     /**
      * Second node value.
      *
      * @var Symbol
      */
     public $second;
-
     /**
      * Third node value.
      *
      * @var Symbol
      */
     public $third;
-
     /**
      * Create a new symbol.
      *
@@ -85,50 +75,46 @@ class Symbol
         /**
          * Left binding power (precedence).
          */
-        public $leftBindingPower
-    ) {
+        public $left_binding_power
+    )
+    {
         $this->parser = $parser;
     }
-
     /**
      * Set the null denotation getter.
      *
      * @return $this
      */
-    public function setNullDenotationGetter(Closure $getter): static
+    public function set_null_denotation_getter(Closure $getter): static
     {
-        $this->nullDenotationGetter = $getter;
+        $this->null_denotation_getter = $getter;
         return $this;
     }
-
     /**
      * Set the left denotation getter.
      *
      * @return $this
      */
-    public function setLeftDenotationGetter(Closure $getter): static
+    public function set_left_denotation_getter(Closure $getter): static
     {
-        $this->leftDenotationGetter = $getter;
+        $this->left_denotation_getter = $getter;
         return $this;
     }
-
     /**
      * Get null denotation.
      *
      * @throws Exception\ParseException
      * @return Symbol
      */
-    public function getNullDenotation()
+    public function get_null_denotation()
     {
-        if ($this->nullDenotationGetter === null) {
-            throw new Exception\ParseException(sprintf('Syntax error: %s', $this->id));
+        if ($this->null_denotation_getter === null) {
+            throw new Exception\Parse_Exception(sprintf('Syntax error: %s', $this->id));
         }
-
         /** @var callable $function  */
-        $function = $this->nullDenotationGetter;
+        $function = $this->null_denotation_getter;
         return $function($this);
     }
-
     /**
      * Get left denotation.
      *
@@ -136,14 +122,13 @@ class Symbol
      * @throws Exception\ParseException
      * @return Symbol
      */
-    public function getLeftDenotation($left)
+    public function get_left_denotation($left)
     {
-        if ($this->leftDenotationGetter === null) {
-            throw new Exception\ParseException(sprintf('Unknown operator: %s', $this->id));
+        if ($this->left_denotation_getter === null) {
+            throw new Exception\Parse_Exception(sprintf('Unknown operator: %s', $this->id));
         }
-
         /** @var callable $function  */
-        $function = $this->leftDenotationGetter;
+        $function = $this->left_denotation_getter;
         return $function($this, $left);
     }
 }

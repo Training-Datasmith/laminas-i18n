@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\I18n\Geography;
 
 /**
@@ -10,10 +9,10 @@ namespace Laminas\I18n\Geography;
  * @psalm-internal Laminas\I18n
  * @psalm-internal LaminasTest\I18n
  */
-final readonly class DefaultCountryCodeListFactory
+final readonly class Default_Country_Code_List_Factory
 {
-    public function __invoke(): DefaultCountryCodeList
+    public function __invoke(): Default_Country_Code_List
     {
-        return DefaultCountryCodeList::create();
+        return Default_Country_Code_List::create();
     }
 }

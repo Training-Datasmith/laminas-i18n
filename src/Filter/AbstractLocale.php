@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\I18n\Filter;
 
-use Laminas\Filter\AbstractFilter;
+use Laminas\Filter\Abstract_Filter;
 use Locale;
-
 /**
  * @psalm-type Options = array{
  *     locale: string|null,
@@ -15,7 +13,7 @@ use Locale;
  * @template TOptions of Options
  * @extends AbstractFilter<TOptions>
  */
-abstract class AbstractLocale extends AbstractFilter
+abstract class Abstract_Locale extends Abstract_Filter
 {
     /**
      * Sets the locale option
@@ -23,21 +21,20 @@ abstract class AbstractLocale extends AbstractFilter
      * @param  string|null $locale
      * @return $this
      */
-    public function setLocale($locale = null)
+    public function set_locale($locale = null)
     {
         $this->options['locale'] = $locale;
         return $this;
     }
-
     /**
      * Returns the locale option
      *
      * @return string
      */
-    public function getLocale()
+    public function get_locale()
     {
-        if (! isset($this->options['locale'])) {
-            $this->options['locale'] = Locale::getDefault();
+        if (!isset($this->options['locale'])) {
+            $this->options['locale'] = Locale::get_default();
         }
         return $this->options['locale'];
     }
