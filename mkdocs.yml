@@ -47,7 +47,7 @@ repo_url: 'https://github.com/laminas/laminas-i18n'
 extra:
     project: Components
     installation:
-        config_provider_class: 'Laminas\I18n\ConfigProvider'
+        config_provider_class: 'Laminas\I18n\Config_Provider'
         module_class: 'Laminas\I18n\Module'
     related_documentations:
         headline: Related Components

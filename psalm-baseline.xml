@@ -2,11 +2,11 @@
 <files psalm-version="6.14.2@bbd217fc98c0daa0a13aea2a7f119d03ba3fc9a0">
   <file src="src/ConfigProvider.php">
     <DeprecatedClass>
-      <code><![CDATA[Validator\PhoneNumber::class]]></code>
-      <code><![CDATA[Validator\PhoneNumber::class]]></code>
-      <code><![CDATA[Validator\PhoneNumber::class]]></code>
-      <code><![CDATA[Validator\PhoneNumber::class]]></code>
-      <code><![CDATA[Validator\PhoneNumber::class]]></code>
+      <code><![CDATA[Validator\Phone_Number::class]]></code>
+      <code><![CDATA[Validator\Phone_Number::class]]></code>
+      <code><![CDATA[Validator\Phone_Number::class]]></code>
+      <code><![CDATA[Validator\Phone_Number::class]]></code>
+      <code><![CDATA[Validator\Phone_Number::class]]></code>
     </DeprecatedClass>
   </file>
   <file src="src/Exception/ExtensionNotLoadedException.php">
@@ -342,7 +342,7 @@
             '?' => $this->evaluateAstPart($ast['arguments'][0], $number)
                    ? $this->evaluateAstPart($ast['arguments'][1], $number)
                    : $this->evaluateAstPart($ast['arguments'][2], $number),
-            default => throw new Exception\ParseException(sprintf(
+            default => throw new Exception\Parse_Exception(sprintf(
                 'Unknown token: %s',
                 $ast['id']
             )),
@@ -393,7 +393,7 @@
             '?' => $this->evaluateAstPart($ast['arguments'][0], $number)
                    ? $this->evaluateAstPart($ast['arguments'][1], $number)
                    : $this->evaluateAstPart($ast['arguments'][2], $number),
-            default => throw new Exception\ParseException(sprintf(
+            default => throw new Exception\Parse_Exception(sprintf(
                 'Unknown token: %s',
                 $ast['id']
             )),
